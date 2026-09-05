@@ -1005,6 +1005,14 @@ html {
 .block.bg-dark .font20 {
   margin-bottom: 30px;
 }
+.block.bg-dark .text-icon-title {
+  color: #fff;
+  font-weight: 600;
+  margin-top: 15px;
+}
+.block.bg-dark .text-icon-text {
+  color: #d1d5db;
+}
 .block.pad-sm {
   padding: 50px 0 30px;
 }
@@ -3240,16 +3248,24 @@ Skin Name: Nivo Slider Default Theme
   border-radius: 50%;
   background: #fff;
 }
-.text-icon-icon span .icon {
+.text-icon-icon span .icon,
+.text-icon-icon span .fa {
   position: relative;
   z-index: 1;
-  font-size: 76px;
+  font-size: 52px;
   line-height: 113px;
   color: #f47629;
   -webkit-transition: color 0.3s ease;
   -moz-transition: color 0.3s ease;
   -ms-transition: color 0.3s ease;
   -o-transition: color 0.3s ease;
+}
+.text-icon-icon span .icon {
+  font-size: 76px;
+}
+.text-icon:hover .icon,
+.text-icon:hover .fa {
+  color: #fff;
 }
 .text-icon-icon .icon-hover {
   position: absolute;
