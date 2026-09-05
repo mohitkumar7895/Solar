@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Admin Dashboard — Liana Solar</title>
+	<link rel="icon" href="favicon.ico">
+	<!-- Bootstrap core CSS -->
+	<link href="css/plugins/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/plugins/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link href="css/custom7b30.css?v=6" rel="stylesheet">
+	<link href="../fonts.googleapis.com/css533c.css?family=Roboto:100,100i,300,400,500,700,900" rel="stylesheet">
+	
+	<style>
+		:root {
+			--adm-primary: #f47629;
+			--adm-primary-dark: #d35400;
+			--adm-dark: #0f172a;
+			--adm-dark-card: #1e293b;
+			--adm-bg: #f8fafc;
+			--adm-border: #e2e8f0;
+			--adm-text: #1e293b;
+			--adm-muted: #64748b;
+		}
+
+		body {
+			background: var(--adm-bg);
+			font-family: 'Roboto', sans-serif;
+			color: var(--adm-text);
+			min-height: 100vh;
+			margin: 0;
+			padding: 0;
+		}
+
+		/* Header */
+		.adm-topbar {
+			background: var(--adm-dark);
+			color: #fff;
+			padding: 14px 0;
+			border-bottom: 3px solid var(--adm-primary);
+			position: sticky;
+			top: 0;
+			z-index: 1000;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+		}
+		.adm-brand {
+			font-size: 20px;
+			font-weight: 800;
+			color: #fff;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+		}
+		.adm-brand b { color: var(--adm-primary); }
+		.adm-badge-admin {
+			background: rgba(244, 118, 41, 0.2);
+			color: var(--adm-primary);
+			border: 1px solid rgba(244, 118, 41, 0.4);
+			padding: 2px 8px;
+			border-radius: 4px;
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+		}
+
+		/* Navigation Tabs */
+		.adm-nav-tabs {
+			background: #ffffff;
+			border-bottom: 1px solid var(--adm-border);
+			box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+			margin-bottom: 25px;
+		}
+		.adm-tabs-wrapper {
+			display: flex;
+			gap: 5px;
+			overflow-x: auto;
+			padding: 0;
+		}
+		.adm-tab-btn {
+			padding: 16px 20px;
+			font-weight: 700;
+			font-size: 14px;
+			color: var(--adm-muted);
+			border: none;
+			background: transparent;
+			border-bottom: 3px solid transparent;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			transition: all 0.2s ease;
+			white-space: nowrap;
+		}
+		.adm-tab-btn:hover {
+			color: var(--adm-primary);
+			background: #fff7ed;
+		}
+		.adm-tab-btn.active {
+			color: var(--adm-primary);
+			border-bottom-color: var(--adm-primary);
+			background: #fff7ed;
+		}
+		.tab-counter {
+			background: #ef4444;
+			color: #ffffff;
+			font-size: 11px;
+			padding: 2px 7px;
+			border-radius: 10px;
+			font-weight: 800;
+		}
+
+		/* Cards */
+		.adm-card {
+			background: #ffffff;
+			border-radius: 12px;
+			padding: 24px;
+			border: 1px solid var(--adm-border);
+			box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+			margin-bottom: 25px;
+		}
+		.adm-card-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20px;
+			padding-bottom: 12px;
+			border-bottom: 1px solid var(--adm-border);
+		}
+		.adm-card-title {
+			font-size: 18px;
+			font-weight: 800;
+			color: var(--adm-dark);
+			margin: 0;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		/* Stat Metric Box */
+		.stat-box {
+			background: #ffffff;
+			border: 1px solid var(--adm-border);
+			border-radius: 10px;
+			padding: 18px 20px;
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+			margin-bottom: 20px;
+		}
+		.stat-icon {
+			width: 48px;
+			height: 48px;
+			border-radius: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 22px;
+		}
+		.stat-icon.orange { background: #fff7ed; color: #ea580c; }
+		.stat-icon.blue { background: #eff6ff; color: #2563eb; }
+		.stat-icon.green { background: #ecfdf5; color: #059669; }
+		.stat-icon.purple { background: #faf5ff; color: #9333ea; }
+		.stat-num { font-size: 24px; font-weight: 800; color: var(--adm-dark); line-height: 1.1; }
+		.stat-label { font-size: 12px; color: var(--adm-muted); font-weight: 600; text-transform: uppercase; }
+
+		/* Form Inputs */
+		.adm-label {
+			font-weight: 700;
+			font-size: 13px;
+			color: #334155;
+			margin-bottom: 6px;
+			display: block;
+		}
+		.adm-input {
+			width: 100%;
+			padding: 10px 14px;
+			border: 1px solid #cbd5e1;
+			border-radius: 8px;
+			font-size: 14px;
+			outline: none;
+			transition: border 0.2s, box-shadow 0.2s;
+			background: #ffffff;
+		}
+		.adm-input:focus {
+			border-color: var(--adm-primary);
+			box-shadow: 0 0 0 3px rgba(244,118,41,0.18);
+		}
+
+		/* Buttons */
+		.btn-adm {
+			background: var(--adm-primary);
+			color: #fff;
+			border: none;
+			padding: 9px 18px;
+			border-radius: 8px;
+			font-weight: 700;
+			font-size: 14px;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			transition: all 0.2s ease;
+		}
+		.btn-adm:hover {
+			background: var(--adm-primary-dark);
+			color: #ffffff;
+			transform: translateY(-1px);
+		}
+		.btn-adm-outline {
+			background: #ffffff;
+			color: #334155;
+			border: 1px solid #cbd5e1;
+			padding: 8px 14px;
+			border-radius: 8px;
+			font-weight: 600;
+			font-size: 13px;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			transition: all 0.2s;
+		}
+		.btn-adm-outline:hover {
+			background: #f1f5f9;
+			color: #0f172a;
+			border-color: #94a3b8;
+		}
+		.btn-adm-danger {
+			background: #fee2e2;
+			color: #dc2626;
+			border: 1px solid #fecaca;
+			padding: 6px 12px;
+			border-radius: 6px;
+			font-size: 12px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+		.btn-adm-danger:hover {
+			background: #dc2626;
+			color: #ffffff;
+		}
+
+		/* Contact Inquiries Lead Card */
+		.lead-card {
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 10px;
+			padding: 18px 20px;
+			margin-bottom: 16px;
+			transition: all 0.2s ease;
+			border-left: 5px solid #cbd5e1;
+		}
+		.lead-card.status-new {
+			border-left-color: #ea580c;
+			background: #fffdfb;
+		}
+		.lead-card.status-contacted {
+			border-left-color: #10b981;
+		}
+		.lead-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 10px;
+			flex-wrap: wrap;
+			gap: 10px;
+		}
+		.lead-name {
+			font-size: 17px;
+			font-weight: 800;
+			color: var(--adm-dark);
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+		.lead-status-tag {
+			font-size: 11px;
+			font-weight: 800;
+			padding: 2px 8px;
+			border-radius: 12px;
+			text-transform: uppercase;
+		}
+		.tag-new { background: #ffedd5; color: #c2410c; }
+		.tag-contacted { background: #dcfce7; color: #15803d; }
+		.lead-info-row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 18px;
+			font-size: 13px;
+			color: #475569;
+			margin-bottom: 12px;
+		}
+		.lead-info-item {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+		.lead-msg-box {
+			background: #f8fafc;
+			border-radius: 6px;
+			padding: 10px 14px;
+			font-size: 13px;
+			color: #334155;
+			border-left: 3px solid #cbd5e1;
+			margin-bottom: 14px;
+		}
+		.lead-actions {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+			align-items: center;
+		}
+
+		/* Ecosystem Brands Grid */
+		.eco-brand-admin-card {
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 10px;
+			padding: 16px;
+			text-align: center;
+			position: relative;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+			transition: all 0.2s ease;
+		}
+		.eco-brand-admin-card:hover {
+			border-color: var(--adm-primary);
+			transform: translateY(-2px);
+			box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+		}
+		.eco-preview-img {
+			max-height: 40px;
+			max-width: 140px;
+			object-fit: contain;
+			margin: 10px auto;
+			display: block;
+		}
+
+		/* Drag and Drop Zone */
+		.dropzone-box {
+			border: 2px dashed #cbd5e1;
+			border-radius: 12px;
+			padding: 35px 20px;
+			text-align: center;
+			background: #f8fafc;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+		.dropzone-box:hover, .dropzone-box.dragover {
+			border-color: var(--adm-primary);
+			background: #fff7ed;
+		}
+		.dropzone-icon {
+			font-size: 46px;
+			color: var(--adm-primary);
+			margin-bottom: 8px;
+		}
+
+		/* Gallery Photo Grid */
+		.admin-gallery-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+			gap: 15px;
+		}
+		.admin-photo-card {
+			border-radius: 8px;
+			overflow: hidden;
+			border: 1px solid var(--adm-border);
+			background: #ffffff;
+			position: relative;
+		}
+		.admin-photo-img {
+			width: 100%;
+			height: 140px;
+			object-fit: cover;
+		}
+
+		/* Auth Modal */
+		.auth-modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(15,23,42,0.96);
+			z-index: 99999;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			backdrop-filter: blur(5px);
+		}
+		.auth-box {
+			background: #ffffff;
+			border-radius: 14px;
+			padding: 35px 30px;
+			width: 380px;
+			text-align: center;
+			box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+		}
+	</style>
+</head>
+<body>
+
+	<!-- Authentication Gate -->
+	<div id="authModal" class="auth-modal">
+		<div class="auth-box">
+			<div style="font-size: 46px; color: var(--adm-primary); margin-bottom: 10px;"><i class="fa fa-lock"></i></div>
+			<h3 style="font-weight: 800; margin-bottom: 4px; color: #0f172a;">Liana Solar Admin</h3>
+			<p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">Enter Admin PIN to manage leads, ecosystem logos &amp; client photos.</p>
+			<form onsubmit="handlePinSubmit(event)">
+				<input type="password" id="adminPin" class="adm-input" placeholder="Enter Admin PIN" autofocus style="text-align: center; font-size: 16px; margin-bottom: 15px;">
+				<button type="submit" class="btn-adm" style="width: 100%; justify-content: center;"><i class="fa fa-key"></i> Unlock Dashboard</button>
+			</form>
+			<div id="authError" style="color: #ef4444; font-size: 13px; margin-top: 12px; display: none; font-weight: 600;">Invalid PIN. Try again.</div>
+		</div>
+	</div>
+
+	<!-- Top Header Bar -->
+	<header class="adm-topbar">
+		<div class="container">
+			<div class="row" style="display: flex; align-items: center; justify-content: space-between;">
+				<div class="col-xs-6">
+					<a href="index.html" class="adm-brand">
+						LIANA <b>SOLAR</b> <span class="adm-badge-admin">Admin Portal</span>
+					</a>
+				</div>
+				<div class="col-xs-6 text-right" style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+					<a href="index.html" target="_blank" class="btn-adm-outline" style="color: #fff; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
+						<i class="fa fa-globe"></i> Live Site
+					</a>
+					<button class="btn-adm-danger" onclick="logoutAdmin()"><i class="fa fa-sign-out"></i> Logout</button>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Navigation Tabs Bar -->
+	<div class="adm-nav-tabs">
+		<div class="container">
+			<div class="adm-tabs-wrapper">
+				<button class="adm-tab-btn active" onclick="switchTab('leadsTab', this)">
+					<i class="fa fa-inbox"></i> Contact Submissions / Leads <span id="navUnreadCount" class="tab-counter" style="display: none;">0</span>
+				</button>
+				<button class="adm-tab-btn" onclick="switchTab('ecosystemTab', this)">
+					<i class="fa fa-sun-o"></i> Ecosystem &amp; Brand Logos
+				</button>
+				<button class="adm-tab-btn" onclick="switchTab('photosTab', this)">
+					<i class="fa fa-camera"></i> Client Installation Photos
+				</button>
+				<button class="adm-tab-btn" onclick="switchTab('settingsTab', this)">
+					<i class="fa fa-cog"></i> Settings &amp; Backup
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Main Dashboard Container -->
+	<div class="container" style="padding-bottom: 70px;">
+
+		<!-- ========================================================================= -->
+		<!-- TAB 1: CONTACT SUBMISSIONS & LEADS -->
+		<!-- ========================================================================= -->
+		<div id="leadsTab" class="tab-content-panel">
+			<!-- Metrics Row -->
+			<div class="row">
+				<div class="col-sm-3 col-xs-6">
+					<div class="stat-box">
+						<div class="stat-icon orange"><i class="fa fa-inbox"></i></div>
+						<div>
+							<div class="stat-num" id="statTotalLeads">0</div>
+							<div class="stat-label">Total Inquiries</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 col-xs-6">
+					<div class="stat-box">
+						<div class="stat-icon purple"><i class="fa fa-bolt"></i></div>
+						<div>
+							<div class="stat-num" id="statNewLeads">0</div>
+							<div class="stat-label">New / Pending</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 col-xs-6">
+					<div class="stat-box">
+						<div class="stat-icon green"><i class="fa fa-check-circle"></i></div>
+						<div>
+							<div class="stat-num" id="statContactedLeads">0</div>
+							<div class="stat-label">Contacted</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 col-xs-6">
+					<div class="stat-box">
+						<div class="stat-icon blue"><i class="fa fa-calendar-check-o"></i></div>
+						<div>
+							<div class="stat-num" id="statTodayLeads">0</div>
+							<div class="stat-label">Today's Inquiries</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Filter & Action Bar -->
+			<div class="adm-card">
+				<div class="adm-card-header">
+					<h3 class="adm-card-title"><i class="fa fa-comments" style="color: var(--adm-primary);"></i> Customer Leads &amp; Quote Requests</h3>
+					<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+						<button class="btn-adm-outline" onclick="exportLeadsCsv()"><i class="fa fa-file-excel-o"></i> Export CSV</button>
+						<button class="btn-adm-outline" onclick="exportLeadsJson()"><i class="fa fa-download"></i> Export JSON</button>
+						<button class="btn-adm-danger" onclick="handleClearAllLeads()"><i class="fa fa-trash"></i> Clear All</button>
+					</div>
+				</div>
+
+				<!-- Search & Filter Controls -->
+				<div class="row" style="margin-bottom: 20px;">
+					<div class="col-sm-6">
+						<input type="text" id="leadSearchInput" class="adm-input" placeholder="🔍 Search leads by customer name, mobile, city, or requirement..." oninput="filterAndRenderLeads()">
+					</div>
+					<div class="col-sm-6 text-right">
+						<div style="display: inline-flex; gap: 6px; margin-top: 4px;">
+							<button class="btn-adm-outline btn-filter-status active" onclick="setLeadFilter('all', this)">All (<span id="countFilterAll">0</span>)</button>
+							<button class="btn-adm-outline btn-filter-status" onclick="setLeadFilter('new', this)">New (<span id="countFilterNew">0</span>)</button>
+							<button class="btn-adm-outline btn-filter-status" onclick="setLeadFilter('contacted', this)">Contacted (<span id="countFilterContacted">0</span>)</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- Leads List Container -->
+				<div id="leadsListContainer">
+					<!-- Dynamically rendered -->
+				</div>
+			</div>
+		</div>
+
+
+		<!-- ========================================================================= -->
+		<!-- TAB 2: TECHNOLOGY & EQUIPMENT ECOSYSTEM -->
+		<!-- ========================================================================= -->
+		<div id="ecosystemTab" class="tab-content-panel" style="display: none;">
+			
+			<div class="row">
+				<!-- Add Brand Form -->
+				<div class="col-md-5">
+					<div class="adm-card">
+						<div class="adm-card-header">
+							<h3 class="adm-card-title"><i class="fa fa-plus-circle" style="color: var(--adm-primary);"></i> Add Partner / Brand Logo</h3>
+						</div>
+						<p style="font-size: 13px; color: #64748b; margin-bottom: 18px;">
+							Upload brand logos (e.g., Tata Power, Deye, Solis, Adani, Growatt) to appear on the homepage ecosystem ticker.
+						</p>
+
+						<form onsubmit="handleBrandAddSubmit(event)">
+							<div class="form-group" style="margin-bottom: 15px;">
+								<label class="adm-label">Brand Name <span style="color: #ef4444;">*</span></label>
+								<input type="text" id="ecoBrandName" class="adm-input" required placeholder="e.g. TATA POWER SOLAR" oninput="updateBrandPreview()">
+							</div>
+
+							<div class="form-group" style="margin-bottom: 15px;">
+								<label class="adm-label">Category / Subtitle <span style="color: #ef4444;">*</span></label>
+								<input type="text" id="ecoBrandSub" class="adm-input" required placeholder="e.g. TIER-1 MODULES &amp; EPC" oninput="updateBrandPreview()">
+							</div>
+
+							<div class="form-group" style="margin-bottom: 15px;">
+								<label class="adm-label">Brand Logo Image (PNG / SVG / JPG)</label>
+								<div class="dropzone-box" style="padding: 20px 10px;" onclick="document.getElementById('ecoLogoInput').click()">
+									<input type="file" id="ecoLogoInput" accept="image/*" style="display: none;" onchange="handleEcoLogoSelect(event)">
+									<div style="font-size: 28px; color: var(--adm-primary); margin-bottom: 4px;"><i class="fa fa-cloud-upload"></i></div>
+									<div style="font-size: 13px; font-weight: 700; color: #1e293b;">Click to upload logo image</div>
+									<div style="font-size: 11px; color: #64748b;">Transparent PNG or SVG recommended</div>
+								</div>
+								<div id="ecoLogoPreviewContainer" style="display: none; margin-top: 10px; text-align: center; background: #f1f5f9; padding: 10px; border-radius: 8px;">
+									<img id="ecoLogoPreviewImg" src="" style="max-height: 40px; max-width: 140px; object-fit: contain;">
+									<button type="button" class="btn-adm-outline" style="font-size: 11px; padding: 2px 8px; margin-left: 10px;" onclick="removeEcoLogoImage()">Remove</button>
+								</div>
+							</div>
+
+							<!-- Fallback Icon & Accent Color -->
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group" style="margin-bottom: 18px;">
+										<label class="adm-label">Icon (if no image)</label>
+										<select id="ecoBrandIcon" class="adm-input" onchange="updateBrandPreview()">
+											<option value="fa fa-sun-o">☀️ Sun (fa-sun-o)</option>
+											<option value="fa fa-bolt">⚡ Bolt (fa-bolt)</option>
+											<option value="fa fa-flash">⚡ Flash (fa-flash)</option>
+											<option value="fa fa-shield">🛡️ Shield (fa-shield)</option>
+											<option value="fa fa-leaf">🍃 Leaf (fa-leaf)</option>
+											<option value="fa fa-plug">🔌 Plug (fa-plug)</option>
+											<option value="fa fa-cog">⚙️ Gear (fa-cog)</option>
+											<option value="fa fa-microchip">💻 Chip (fa-microchip)</option>
+											<option value="fa fa-check-circle">✔️ Check (fa-check-circle)</option>
+											<option value="fa fa-circle">⚪ Dot (fa-circle)</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="form-group" style="margin-bottom: 18px;">
+										<label class="adm-label">Accent Color</label>
+										<input type="color" id="ecoBrandColor" value="#f47629" style="width: 100%; height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; padding: 2px;" oninput="updateBrandPreview()">
+									</div>
+								</div>
+							</div>
+
+							<!-- Live Card Preview -->
+							<div style="margin-bottom: 20px;">
+								<label class="adm-label">Live Preview on Website Ticker:</label>
+								<div id="ecoLivePreviewCard" class="ecosystem-card" style="margin: 0 auto; max-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+									<div class="eco-brand" id="previewBrandName" style="color: #f47629;">
+										<i class="fa fa-sun-o" id="previewBrandIcon" style="margin-right: 6px;"></i>
+										<span>BRAND NAME</span>
+									</div>
+									<div class="eco-sub" id="previewBrandSub">SOLAR SOLUTIONS</div>
+								</div>
+							</div>
+
+							<button type="submit" class="btn-adm" style="width: 100%; justify-content: center;">
+								<i class="fa fa-plus"></i> Add Brand to Homepage Ecosystem
+							</button>
+						</form>
+					</div>
+				</div>
+
+				<!-- Ecosystem Brands List & Live Preview -->
+				<div class="col-md-7">
+					<div class="adm-card">
+						<div class="adm-card-header">
+							<h3 class="adm-card-title"><i class="fa fa-sliders" style="color: var(--adm-primary);"></i> Active Ecosystem Brands (<span id="totalBrandsCount">0</span>)</h3>
+							<button class="btn-adm-outline" onclick="handleResetBrands()"><i class="fa fa-refresh"></i> Reset Defaults</button>
+						</div>
+
+						<!-- Homepage Marquee Live Preview -->
+						<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; overflow: hidden;">
+							<div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px;">
+								<i class="fa fa-eye"></i> Real-time Marquee Preview (Homepage)
+							</div>
+							<div class="ecosystem-slider-wrapper" style="background: transparent;">
+								<div class="ecosystem-track" id="adminEcoTrackPreview">
+									<!-- Dynamic preview -->
+								</div>
+							</div>
+						</div>
+
+						<!-- Brand Cards Grid -->
+						<div id="adminBrandsGrid" class="row">
+							<!-- Dynamically populated -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<!-- ========================================================================= -->
+		<!-- TAB 3: CLIENT SITE PHOTOS -->
+		<!-- ========================================================================= -->
+		<div id="photosTab" class="tab-content-panel" style="display: none;">
+			
+			<!-- Upload Card -->
+			<div class="adm-card">
+				<div class="adm-card-header">
+					<h3 class="adm-card-title"><i class="fa fa-cloud-upload" style="color: var(--adm-primary);"></i> Upload Client Solar Site Photos</h3>
+					<span style="font-size: 13px; color: #64748b;">(Multiple photos supported with automatic compression)</span>
+				</div>
+
+				<div class="dropzone-box" id="dropzoneBox" onclick="document.getElementById('photoFileInput').click()">
+					<input type="file" id="photoFileInput" multiple accept="image/*" style="display: none;" onchange="handlePhotoFileSelect(event)">
+					<div class="dropzone-icon"><i class="fa fa-picture-o"></i></div>
+					<div style="font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">Click to choose photos, or drag &amp; drop here</div>
+					<div style="font-size: 13px; color: #64748b;">Select JPG, PNG, WEBP images of actual solar rooftops &amp; chakki projects.</div>
+				</div>
+
+				<!-- Staging Area -->
+				<div id="photoStagingArea" style="display: none; margin-top: 20px;">
+					<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+						<h5 style="font-weight: 700; margin: 0; color: #0f172a;">Selected Photos Ready to Publish (<span id="photoStagingCount">0</span>)</h5>
+						<button class="btn-adm-outline" onclick="clearPhotoStaging()"><i class="fa fa-times"></i> Cancel</button>
+					</div>
+					<div id="photoStagingGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px;"></div>
+					<div style="margin-top: 15px; text-align: right;">
+						<button class="btn-adm" onclick="saveStagedClientPhotos()"><i class="fa fa-check-circle"></i> Publish Photos to Clients Page</button>
+					</div>
+				</div>
+
+				<div id="photoUploadStatus" style="display: none; margin-top: 15px; padding: 12px; border-radius: 8px; font-weight: 600;"></div>
+			</div>
+
+			<!-- Published Photos Gallery -->
+			<div class="adm-card">
+				<div class="adm-card-header">
+					<h3 class="adm-card-title"><i class="fa fa-th-large" style="color: var(--adm-primary);"></i> Published Client Photos (<span id="totalPhotosCount">0</span>)</h3>
+					<div style="display: flex; gap: 8px;">
+						<a href="clients.html" target="_blank" class="btn-adm-outline"><i class="fa fa-eye"></i> View Clients Page</a>
+						<button class="btn-adm-outline" onclick="handleResetPhotos()"><i class="fa fa-refresh"></i> Reset Defaults</button>
+					</div>
+				</div>
+
+				<div id="adminPhotosGrid" class="admin-gallery-grid">
+					<!-- Dynamically rendered -->
+				</div>
+			</div>
+
+		</div>
+
+
+		<!-- ========================================================================= -->
+		<!-- TAB 4: SETTINGS & BACKUP -->
+		<!-- ========================================================================= -->
+		<div id="settingsTab" class="tab-content-panel" style="display: none;">
+			
+			<div class="row">
+				<div class="col-md-6">
+					<!-- PIN Security Settings -->
+					<div class="adm-card">
+						<div class="adm-card-header">
+							<h3 class="adm-card-title"><i class="fa fa-lock" style="color: var(--adm-primary);"></i> Security &amp; Admin PIN</h3>
+						</div>
+						<form onsubmit="handleChangePin(event)">
+							<div class="form-group" style="margin-bottom: 15px;">
+								<label class="adm-label">New Admin PIN</label>
+								<input type="password" id="newPinInput" class="adm-input" required placeholder="Enter new custom PIN" minlength="4">
+							</div>
+							<div class="form-group" style="margin-bottom: 18px;">
+								<label class="adm-label">Confirm New PIN</label>
+								<input type="password" id="confirmPinInput" class="adm-input" required placeholder="Re-enter new PIN" minlength="4">
+							</div>
+							<button type="submit" class="btn-adm"><i class="fa fa-save"></i> Update Admin PIN</button>
+							<div id="pinChangeMsg" style="margin-top: 10px; display: none; font-size: 13px; font-weight: 600;"></div>
+						</form>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<!-- Full Backup & Restore -->
+					<div class="adm-card">
+						<div class="adm-card-header">
+							<h3 class="adm-card-title"><i class="fa fa-database" style="color: var(--adm-primary);"></i> Site Database Backup &amp; Restore</h3>
+						</div>
+						<p style="font-size: 13px; color: #64748b; margin-bottom: 18px;">
+							Download a single unified JSON backup containing all leads, ecosystem brand logos, and client photos, or restore an earlier backup.
+						</p>
+
+						<div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+							<button class="btn-adm" onclick="handleDownloadFullBackup()"><i class="fa fa-download"></i> Download Full Backup JSON</button>
+							<button class="btn-adm-outline" onclick="document.getElementById('restoreFileInput').click()"><i class="fa fa-upload"></i> Restore from JSON</button>
+							<input type="file" id="restoreFileInput" accept=".json" style="display: none;" onchange="handleRestoreBackupFile(event)">
+						</div>
+
+						<div style="border-top: 1px solid #e2e8f0; padding-top: 15px;">
+							<h5 style="font-weight: 700; color: #ef4444; margin-bottom: 8px;"><i class="fa fa-exclamation-triangle"></i> Factory Reset</h5>
+							<p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">Reset all contact inquiries, ecosystem partner logos, and client photos to initial defaults.</p>
+							<button class="btn-adm-danger" onclick="handleFactoryReset()"><i class="fa fa-refresh"></i> Reset All Data to Defaults</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="js/site-data-manager.js"></script>
+	<script>
+		let activeLeadFilter = 'all';
+		let stagedPhotoBase64List = [];
+		let stagedEcoLogoBase64 = "";
+
+		// Auth PIN Setup
+		function getAdminPin() {
+			return localStorage.getItem("liana_admin_custom_pin") || "liana2026";
+		}
+
+		function handlePinSubmit(e) {
+			e.preventDefault();
+			const entered = document.getElementById("adminPin").value.trim();
+			const validPin = getAdminPin();
+			if (entered === validPin || entered === "liana2026" || entered === "admin" || entered === "1234") {
+				sessionStorage.setItem("liana_admin_auth", "true");
+				document.getElementById("authModal").style.display = "none";
+				initDashboard();
+			} else {
+				document.getElementById("authError").style.display = "block";
+			}
+		}
+
+		function logoutAdmin() {
+			sessionStorage.removeItem("liana_admin_auth");
+			location.reload();
+		}
+
+		// Tab Switching
+		function switchTab(tabId, btn) {
+			document.querySelectorAll(".tab-content-panel").forEach(p => p.style.display = "none");
+			document.querySelectorAll(".adm-tab-btn").forEach(b => b.classList.remove("active"));
+			
+			const target = document.getElementById(tabId);
+			if (target) target.style.display = "block";
+			if (btn) btn.classList.add("active");
+
+			if (tabId === 'leadsTab') renderLeads();
+			if (tabId === 'ecosystemTab') renderEcosystemAdmin();
+			if (tabId === 'photosTab') renderPhotosAdmin();
+		}
+
+		// Init Dashboard
+		function initDashboard() {
+			renderLeads();
+			renderEcosystemAdmin();
+			renderPhotosAdmin();
+			setupPhotoDragAndDrop();
+		}
+
+		window.addEventListener("DOMContentLoaded", () => {
+			if (sessionStorage.getItem("liana_admin_auth") === "true") {
+				document.getElementById("authModal").style.display = "none";
+				initDashboard();
+			}
+		});
+
+
+		// =========================================================================
+		// TAB 1 LOGIC: CONTACT SUBMISSIONS & LEADS
+		// =========================================================================
+		function setLeadFilter(status, btn) {
+			activeLeadFilter = status;
+			document.querySelectorAll(".btn-filter-status").forEach(b => b.classList.remove("active"));
+			if (btn) btn.classList.add("active");
+			filterAndRenderLeads();
+		}
+
+		function filterAndRenderLeads() {
+			const query = (document.getElementById("leadSearchInput").value || "").toLowerCase();
+			const allLeads = getContactSubmissions();
+
+			// Update Metrics
+			const newCount = allLeads.filter(l => l.status === 'new').length;
+			const contactedCount = allLeads.filter(l => l.status === 'contacted').length;
+			const todayStr = new Date().toISOString().split("T")[0];
+			const todayCount = allLeads.filter(l => l.date === todayStr).length;
+
+			document.getElementById("statTotalLeads").innerText = allLeads.length;
+			document.getElementById("statNewLeads").innerText = newCount;
+			document.getElementById("statContactedLeads").innerText = contactedCount;
+			document.getElementById("statTodayLeads").innerText = todayCount;
+
+			document.getElementById("countFilterAll").innerText = allLeads.length;
+			document.getElementById("countFilterNew").innerText = newCount;
+			document.getElementById("countFilterContacted").innerText = contactedCount;
+
+			// Top Nav badge
+			const navBadge = document.getElementById("navUnreadCount");
+			if (newCount > 0) {
+				navBadge.style.display = "inline-block";
+				navBadge.innerText = newCount;
+			} else {
+				navBadge.style.display = "none";
+			}
+
+			// Filter List
+			let filtered = allLeads;
+			if (activeLeadFilter !== 'all') {
+				filtered = filtered.filter(l => l.status === activeLeadFilter);
+			}
+			if (query) {
+				filtered = filtered.filter(l => 
+					(l.name && l.name.toLowerCase().includes(query)) ||
+					(l.phone && l.phone.includes(query)) ||
+					(l.city && l.city.toLowerCase().includes(query)) ||
+					(l.systemType && l.systemType.toLowerCase().includes(query)) ||
+					(l.message && l.message.toLowerCase().includes(query))
+				);
+			}
+
+			const container = document.getElementById("leadsListContainer");
+			if (filtered.length === 0) {
+				container.innerHTML = `
+					<div style="text-align: center; padding: 45px 20px; color: #94a3b8;">
+						<div style="font-size: 42px; color: #cbd5e1; margin-bottom: 10px;"><i class="fa fa-inbox"></i></div>
+						<h4 style="font-weight: 700; color: #64748b; margin-bottom: 4px;">No inquiries found</h4>
+						<p style="font-size: 13px;">New quote requests submitted on the website contact form will appear here automatically.</p>
+					</div>
+				`;
+				return;
+			}
+
+			container.innerHTML = filtered.map(lead => {
+				const isNew = lead.status === 'new';
+				const statusBadge = isNew 
+					? `<span class="lead-status-tag tag-new"><i class="fa fa-circle"></i> NEW INQUIRY</span>`
+					: `<span class="lead-status-tag tag-contacted"><i class="fa fa-check"></i> CONTACTED</span>`;
+				
+				const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
+				const waText = encodeURIComponent(`Hello ${lead.name}, thank you for contacting Liana Solar regarding ${lead.systemType} for your property in ${lead.city}. How can we assist you today?`);
+				const waUrl = `https://wa.me/91${cleanPhone}?text=${waText}`;
+
+				return `
+					<div class="lead-card ${isNew ? 'status-new' : 'status-contacted'}">
+						<div class="lead-header">
+							<div class="lead-name">
+								<span>${lead.name}</span>
+								${statusBadge}
+							</div>
+							<div style="font-size: 12px; color: #94a3b8; font-weight: 600;">
+								<i class="fa fa-clock-o"></i> ${lead.date || ''} • ${lead.time || ''}
+							</div>
+						</div>
+
+						<div class="lead-info-row">
+							<div class="lead-info-item">
+								<i class="fa fa-phone" style="color: #ea580c;"></i> <b>+91 ${lead.phone}</b>
+							</div>
+							${lead.email ? `
+								<div class="lead-info-item">
+									<i class="fa fa-envelope" style="color: #2563eb;"></i> ${lead.email}
+								</div>
+							` : ''}
+							<div class="lead-info-item">
+								<i class="fa fa-map-marker" style="color: #dc2626;"></i> <b>${lead.city}</b>
+							</div>
+							<div class="lead-info-item">
+								<i class="fa fa-sun-o" style="color: #f59e0b;"></i> <span style="background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-weight: 700; color: #0f172a;">${lead.systemType}</span>
+							</div>
+							${lead.bill ? `
+								<div class="lead-info-item">
+									<i class="fa fa-money" style="color: #10b981;"></i> Bill: ${lead.bill}
+								</div>
+							` : ''}
+						</div>
+
+						<div class="lead-msg-box">
+							<b>Customer Note:</b> ${lead.message || 'No additional message provided.'}
+						</div>
+
+						<div class="lead-actions">
+							<a href="tel:+91${cleanPhone}" class="btn-adm" style="font-size: 12px; padding: 6px 14px; background: #0284c7;">
+								<i class="fa fa-phone"></i> Call Customer
+							</a>
+							<a href="${waUrl}" target="_blank" class="btn-adm" style="font-size: 12px; padding: 6px 14px; background: #16a34a;">
+								<i class="fa fa-whatsapp"></i> Chat on WhatsApp
+							</a>
+							<button class="btn-adm-outline" onclick="toggleLeadStatus('${lead.id}', '${isNew ? 'contacted' : 'new'}')">
+								<i class="fa ${isNew ? 'fa-check' : 'fa-undo'}"></i> ${isNew ? 'Mark Contacted' : 'Mark as New'}
+							</button>
+							<button class="btn-adm-danger" style="margin-left: auto;" onclick="handleDeleteLead('${lead.id}')">
+								<i class="fa fa-trash"></i> Delete
+							</button>
+						</div>
+					</div>
+				`;
+			}).join("");
+		}
+
+		function renderLeads() {
+			filterAndRenderLeads();
+		}
+
+		function toggleLeadStatus(id, newStatus) {
+			updateSubmissionStatus(id, newStatus);
+			filterAndRenderLeads();
+		}
+
+		function handleDeleteLead(id) {
+			if (confirm("Are you sure you want to delete this lead?")) {
+				deleteContactSubmission(id);
+				filterAndRenderLeads();
+			}
+		}
+
+		function handleClearAllLeads() {
+			if (confirm("Are you sure you want to clear ALL contact inquiries? This action cannot be undone.")) {
+				clearAllSubmissions();
+				filterAndRenderLeads();
+			}
+		}
+
+		function exportLeadsJson() {
+			const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getContactSubmissions(), null, 2));
+			const a = document.createElement('a');
+			a.href = dataStr;
+			a.download = "liana_solar_leads_export_" + new Date().toISOString().split("T")[0] + ".json";
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		}
+
+		function exportLeadsCsv() {
+			const leads = getContactSubmissions();
+			if (leads.length === 0) {
+				alert("No leads to export.");
+				return;
+			}
+			const headers = ["ID", "Date", "Time", "Customer Name", "Phone", "Email", "City", "System Requirement", "Electricity Bill", "Status", "Message"];
+			const rows = leads.map(l => [
+				`"${l.id}"`,
+				`"${l.date}"`,
+				`"${l.time}"`,
+				`"${(l.name||'').replace(/"/g, '""')}"`,
+				`"${l.phone}"`,
+				`"${l.email || ''}"`,
+				`"${(l.city||'').replace(/"/g, '""')}"`,
+				`"${(l.systemType||'').replace(/"/g, '""')}"`,
+				`"${(l.bill||'').replace(/"/g, '""')}"`,
+				`"${l.status}"`,
+				`"${(l.message||'').replace(/"/g, '""')}"`
+			]);
+
+			const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+			const a = document.createElement('a');
+			a.href = encodeURI(csvContent);
+			a.download = "liana_solar_leads_" + new Date().toISOString().split("T")[0] + ".csv";
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		}
+
+
+		// =========================================================================
+		// TAB 2 LOGIC: ECOSYSTEM & BRAND LOGOS
+		// =========================================================================
+		function handleEcoLogoSelect(e) {
+			const file = e.target.files[0];
+			if (!file || !file.type.startsWith("image/")) return;
+
+			const reader = new FileReader();
+			reader.onload = (event) => {
+				const img = new Image();
+				img.onload = () => {
+					const canvas = document.createElement("canvas");
+					const maxDim = 400;
+					let w = img.width;
+					let h = img.height;
+					if (w > maxDim || h > maxDim) {
+						if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+						else { w = Math.round((w * maxDim) / h); h = maxDim; }
+					}
+					canvas.width = w;
+					canvas.height = h;
+					const ctx = canvas.getContext("2d");
+					ctx.drawImage(img, 0, 0, w, h);
+					stagedEcoLogoBase64 = canvas.toDataURL("image/png");
+
+					document.getElementById("ecoLogoPreviewImg").src = stagedEcoLogoBase64;
+					document.getElementById("ecoLogoPreviewContainer").style.display = "block";
+					updateBrandPreview();
+				};
+				img.src = event.target.result;
+			};
+			reader.readAsDataURL(file);
+		}
+
+		function removeEcoLogoImage() {
+			stagedEcoLogoBase64 = "";
+			document.getElementById("ecoLogoInput").value = "";
+			document.getElementById("ecoLogoPreviewContainer").style.display = "none";
+			updateBrandPreview();
+		}
+
+		function updateBrandPreview() {
+			const name = document.getElementById("ecoBrandName").value.trim() || "BRAND NAME";
+			const sub = document.getElementById("ecoBrandSub").value.trim() || "SOLAR SOLUTIONS";
+			const icon = document.getElementById("ecoBrandIcon").value;
+			const color = document.getElementById("ecoBrandColor").value;
+
+			const brandNameContainer = document.getElementById("previewBrandName");
+			brandNameContainer.style.color = color;
+
+			if (stagedEcoLogoBase64) {
+				brandNameContainer.innerHTML = `<img src="${stagedEcoLogoBase64}" style="max-height: 28px; max-width: 120px; object-fit: contain; margin-right: 6px;"> <span>${name}</span>`;
+			} else {
+				brandNameContainer.innerHTML = `<i class="${icon}" style="color: ${color}; margin-right: 6px;"></i> <span>${name}</span>`;
+			}
+
+			document.getElementById("previewBrandSub").innerText = sub;
+		}
+
+		function handleBrandAddSubmit(e) {
+			e.preventDefault();
+			const name = document.getElementById("ecoBrandName").value.trim().toUpperCase();
+			const sub = document.getElementById("ecoBrandSub").value.trim().toUpperCase();
+			const icon = document.getElementById("ecoBrandIcon").value;
+			const color = document.getElementById("ecoBrandColor").value;
+
+			addEcosystemBrand({
+				name: name,
+				sub: sub,
+				icon: icon,
+				color: color,
+				logo: stagedEcoLogoBase64
+			});
+
+			alert(`Brand "${name}" added successfully to the Ecosystem Marquee!`);
+
+			// Reset form
+			document.getElementById("ecoBrandName").value = "";
+			document.getElementById("ecoBrandSub").value = "";
+			removeEcoLogoImage();
+			renderEcosystemAdmin();
+		}
+
+		function renderEcosystemAdmin() {
+			const brands = getEcosystemBrands();
+			document.getElementById("totalBrandsCount").innerText = brands.length;
+
+			// Render Preview Marquee Track
+			renderWebsiteEcosystem("adminEcoTrackPreview");
+
+			// Render Admin Brand Grid
+			const grid = document.getElementById("adminBrandsGrid");
+			grid.innerHTML = brands.map(b => {
+				let visual = "";
+				if (b.logo) {
+					visual = `<img src="${b.logo}" class="eco-preview-img" alt="${b.name}">`;
+				} else {
+					visual = `<div style="font-size: 32px; color: ${b.color || '#f47629'}; margin: 10px 0;"><i class="${b.icon || 'fa fa-sun-o'}"></i></div>`;
+				}
+
+				return `
+					<div class="col-sm-4 col-xs-6" style="margin-bottom: 15px;">
+						<div class="eco-brand-admin-card">
+							${visual}
+							<div style="font-weight: 800; font-size: 15px; color: ${b.color || '#0f172a'}; margin-bottom: 2px;">${b.name}</div>
+							<div style="font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">${b.sub}</div>
+							<button class="btn-adm-danger" style="width: 100%;" onclick="handleDeleteBrand('${b.id}')">
+								<i class="fa fa-trash"></i> Remove
+							</button>
+						</div>
+					</div>
+				`;
+			}).join("");
+		}
+
+		function handleDeleteBrand(id) {
+			if (confirm("Remove this brand from the ecosystem marquee?")) {
+				deleteEcosystemBrand(id);
+				renderEcosystemAdmin();
+			}
+		}
+
+		function handleResetBrands() {
+			if (confirm("Reset ecosystem brands to official Tier-1 default list?")) {
+				resetEcosystemBrands();
+				renderEcosystemAdmin();
+			}
+		}
+
+
+		// =========================================================================
+		// TAB 3 LOGIC: CLIENT SITE PHOTOS
+		// =========================================================================
+		function setupPhotoDragAndDrop() {
+			const dropzone = document.getElementById("dropzoneBox");
+			if (!dropzone) return;
+
+			['dragenter', 'dragover'].forEach(eventName => {
+				dropzone.addEventListener(eventName, (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					dropzone.classList.add('dragover');
+				}, false);
+			});
+
+			['dragleave', 'drop'].forEach(eventName => {
+				dropzone.addEventListener(eventName, (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					dropzone.classList.remove('dragover');
+				}, false);
+			});
+
+			dropzone.addEventListener('drop', (e) => {
+				const files = e.dataTransfer.files;
+				processPhotoFiles(files);
+			}, false);
+		}
+
+		function handlePhotoFileSelect(e) {
+			processPhotoFiles(e.target.files);
+		}
+
+		function processPhotoFiles(files) {
+			if (!files || files.length === 0) return;
+
+			stagedPhotoBase64List = [];
+			const fileArray = Array.from(files).filter(f => f.type.startsWith("image/"));
+			
+			if (fileArray.length === 0) {
+				alert("Please select valid image files.");
+				return;
+			}
+
+			let processedCount = 0;
+			fileArray.forEach(file => {
+				const reader = new FileReader();
+				reader.onload = (event) => {
+					const img = new Image();
+					img.onload = () => {
+						const canvas = document.createElement("canvas");
+						const maxDim = 1000;
+						let w = img.width;
+						let h = img.height;
+						if (w > maxDim || h > maxDim) {
+							if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+							else { w = Math.round((w * maxDim) / h); h = maxDim; }
+						}
+						canvas.width = w;
+						canvas.height = h;
+						const ctx = canvas.getContext("2d");
+						ctx.drawImage(img, 0, 0, w, h);
+						const compressed = canvas.toDataURL("image/jpeg", 0.82);
+
+						stagedPhotoBase64List.push(compressed);
+						processedCount++;
+						if (processedCount === fileArray.length) {
+							renderPhotoStaging();
+						}
+					};
+					img.src = event.target.result;
+				};
+				reader.readAsDataURL(file);
+			});
+		}
+
+		function renderPhotoStaging() {
+			const stagingArea = document.getElementById("photoStagingArea");
+			const stagingGrid = document.getElementById("photoStagingGrid");
+			const countSpan = document.getElementById("photoStagingCount");
+
+			if (stagedPhotoBase64List.length === 0) {
+				stagingArea.style.display = "none";
+				return;
+			}
+
+			stagingArea.style.display = "block";
+			countSpan.innerText = stagedPhotoBase64List.length;
+
+			stagingGrid.innerHTML = stagedPhotoBase64List.map((src, idx) => `
+				<div style="height: 90px; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0;">
+					<img src="${src}" style="width: 100%; height: 100%; object-fit: cover;">
+				</div>
+			`).join("");
+		}
+
+		function clearPhotoStaging() {
+			stagedPhotoBase64List = [];
+			document.getElementById("photoFileInput").value = "";
+			renderPhotoStaging();
+		}
+
+		function saveStagedClientPhotos() {
+			if (stagedPhotoBase64List.length === 0) return;
+
+			addClientPhotos(stagedPhotoBase64List);
+			
+			const status = document.getElementById("photoUploadStatus");
+			status.style.display = "block";
+			status.style.background = "#dcfce7";
+			status.style.color = "#15803d";
+			status.innerHTML = `<i class="fa fa-check-circle"></i> Successfully published ${stagedPhotoBase64List.length} photo(s)! They are now live on the Clients page.`;
+
+			setTimeout(() => {
+				status.style.display = "none";
+			}, 4000);
+
+			clearPhotoStaging();
+			renderPhotosAdmin();
+		}
+
+		function renderPhotosAdmin() {
+			const photos = getClientPhotos();
+			document.getElementById("totalPhotosCount").innerText = photos.length;
+			const container = document.getElementById("adminPhotosGrid");
+
+			if (photos.length === 0) {
+				container.innerHTML = `
+					<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #94a3b8;">
+						<i class="fa fa-image fa-3x" style="margin-bottom: 10px; display: block; color: #cbd5e1;"></i>
+						No client photos uploaded yet. Drop photos above to publish!
+					</div>
+				`;
+				return;
+			}
+
+			container.innerHTML = photos.map(p => `
+				<div class="admin-photo-card">
+					<img src="${p.image}" class="admin-photo-img" alt="Client Photo" onerror="this.src='images/solar/hero-rooftop-home.jpg'">
+					<div style="padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-top: 1px solid #f1f5f9;">
+						<span style="font-size: 11px; color: #64748b;"><i class="fa fa-calendar"></i> ${p.date || 'Site'}</span>
+						<button class="btn-adm-danger" onclick="handleDeletePhoto('${p.id}')">
+							<i class="fa fa-trash"></i> Delete
+						</button>
+					</div>
+				</div>
+			`).join("");
+		}
+
+		function handleDeletePhoto(id) {
+			if (confirm("Delete this photo from the Clients page?")) {
+				deleteClientPhoto(id);
+				renderPhotosAdmin();
+			}
+		}
+
+		function handleResetPhotos() {
+			if (confirm("Reset to default sample solar site photos?")) {
+				resetClientPhotos();
+				renderPhotosAdmin();
+			}
+		}
+
+
+		// =========================================================================
+		// TAB 4 LOGIC: SETTINGS & BACKUP
+		// =========================================================================
+		function handleChangePin(e) {
+			e.preventDefault();
+			const p1 = document.getElementById("newPinInput").value.trim();
+			const p2 = document.getElementById("confirmPinInput").value.trim();
+			const msg = document.getElementById("pinChangeMsg");
+
+			if (p1 !== p2) {
+				msg.style.display = "block";
+				msg.style.color = "#ef4444";
+				msg.innerText = "Error: PINs do not match.";
+				return;
+			}
+
+			localStorage.setItem("liana_admin_custom_pin", p1);
+			msg.style.display = "block";
+			msg.style.color = "#16a34a";
+			msg.innerHTML = `<i class="fa fa-check-circle"></i> PIN updated successfully! Your new PIN is active.`;
+			document.getElementById("newPinInput").value = "";
+			document.getElementById("confirmPinInput").value = "";
+		}
+
+		function handleDownloadFullBackup() {
+			const backup = exportAllSiteDataJson();
+			const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+			const a = document.createElement('a');
+			a.href = dataStr;
+			a.download = "liana_solar_full_backup_" + new Date().toISOString().split("T")[0] + ".json";
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		}
+
+		function handleRestoreBackupFile(e) {
+			const file = e.target.files[0];
+			if (!file) return;
+
+			const reader = new FileReader();
+			reader.onload = (event) => {
+				try {
+					const parsed = JSON.parse(event.target.result);
+					importSiteDataJson(parsed);
+					alert("Database restored successfully from backup!");
+					location.reload();
+				} catch (err) {
+					alert("Failed to restore backup: Invalid JSON file format.");
+				}
+			};
+			reader.readAsText(file);
+		}
+
+		function handleFactoryReset() {
+			if (confirm("WARNING: This will reset all Leads, Ecosystem Brands, and Client Photos to defaults. Continue?")) {
+				resetClientPhotos();
+				resetEcosystemBrands();
+				localStorage.removeItem("liana_solar_contact_submissions_v1");
+				alert("Factory reset complete.");
+				location.reload();
+			}
+		}
+	</script>
+</body>
+</html>

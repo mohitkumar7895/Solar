@@ -4474,7 +4474,425 @@ Skin Name: Nivo Slider Default Theme
 .slick-dots li.slick-active button:hover:after {
   background: #f47629;
 }
+
+/* ========================================================
+   Hero Solar Video Banner
+   ======================================================== */
+.hero-solar-video-section {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  max-height: 640px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #0f172a;
+}
+
+.hero-video-media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%) scale(1.05);
+  object-fit: cover;
+  z-index: 1;
+  pointer-events: none;
+  filter: brightness(0.75) contrast(1.1);
+  animation: heroSlowZoom 25s ease-in-out infinite alternate;
+}
+
+@keyframes heroSlowZoom {
+  0% {
+    transform: translate(-50%, -50%) scale(1.0);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+.hero-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(15, 23, 42, 0.88) 100%);
+  z-index: 2;
+}
+
+.hero-solar-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding: 80px 0;
+}
+
+.hero-solar-content .text1 {
+  font-size: 56px;
+  line-height: 1.15;
+  color: #ffffff;
+  font-weight: 300;
+  margin-bottom: 20px;
+  text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+}
+
+.hero-solar-content .text1 b {
+  font-weight: 800;
+  color: #ff9b36;
+}
+
+.hero-solar-content .text2 {
+  font-size: 22px;
+  color: #f1f5f9;
+  margin-bottom: 30px;
+  font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.hero-solar-content .badge-subsidy {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(244, 118, 41, 0.2);
+  border: 1px solid rgba(244, 118, 41, 0.5);
+  padding: 6px 18px;
+  border-radius: 30px;
+  color: #ffedd5;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  backdrop-filter: blur(8px);
+}
+
+@media (max-width: 767px) {
+  .hero-solar-video-section {
+    min-height: 420px;
+  }
+  .hero-solar-content .text1 {
+    font-size: 34px;
+  }
+  .hero-solar-content .text2 {
+    font-size: 16px;
+  }
+  .hero-solar-content .badge-subsidy {
+    font-size: 14px;
+  }
+}
+
+.ecosystem-section {
+  padding: 35px 0 25px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.ecosystem-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+  position: relative;
+  display: inline-block;
+}
+
+.ecosystem-title:after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: #f47629;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+.ecosystem-slider-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.ecosystem-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: ecoScroll 35s linear infinite;
+}
+
+.ecosystem-section:hover .ecosystem-track {
+  animation-play-state: paused;
+}
+
+@keyframes ecoScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ecosystem-card {
+  flex: 0 0 auto;
+  min-width: 220px;
+  padding: 14px 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.ecosystem-card:hover {
+  transform: translateY(-4px);
+  border-color: #f47629;
+  box-shadow: 0 8px 20px rgba(244, 118, 41, 0.15);
+}
+
+.ecosystem-card .eco-brand {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ecosystem-card .eco-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.ecosystem-card .eco-brand-img {
+  max-height: 28px;
+  max-width: 120px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.ecosystem-card .eco-sub {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+/* Brand specific colors */
+.eco-deye { color: #0984e3; }
+.eco-solis { color: #e67e22; }
+.eco-ina { color: #00a8ff; }
+.eco-livguard { color: #d63031; }
+.eco-luminous { color: #1e3799; }
+.eco-tata { color: #0c2461; }
+.eco-waaree { color: #27ae60; }
+.eco-growatt { color: #20bf6b; }
+.eco-havells { color: #eb2f06; }
+.eco-polycab { color: #d35400; }
+.eco-schneider { color: #10ac84; }
+.eco-microtek { color: #2c3e50; }
+
+/* ========================================================
+   Services Phone Highlight
+   ======================================================== */
+.services-phone-highlight {
+  margin-bottom: 15px !important;
+}
+
+.services-phone-highlight a {
+  color: #f47629 !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px;
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px;
+  border-radius: 30px;
+  background: rgba(244, 118, 41, 0.08);
+  border: 1px solid rgba(244, 118, 41, 0.25);
+  transition: all 0.3s ease;
+}
+
+.services-phone-highlight a:hover {
+  background: #f47629 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px rgba(244, 118, 41, 0.35);
+  transform: translateY(-2px);
+}
+
+.services-phone-highlight a i {
+  color: inherit;
+}
+
+/* ========================================================
+   Client Cards & Admin Styles
+   ======================================================== */
+.client-project-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.client-project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+  border-color: #f47629;
+}
+
+.client-project-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  background: #f1f5f9;
+}
+
+.client-project-body {
+  padding: 20px;
+}
+
+.client-project-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #fff7ed;
+  color: #ea580c;
+  margin-bottom: 8px;
+}
+
+.client-project-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #1e293b;
+}
+
+.client-project-loc {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.client-project-loc i {
+  color: #f47629;
+  margin-right: 5px;
+}
+
+.client-project-desc {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+}
+
 .slick-dots li button:hover,
 .slick-dots li button:focus {
   outline: none;
+}
+
+/* ========================================================
+   Subsidy Box Cards with Smooth Hover Animation
+   ======================================================== */
+.subsidy-box-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  margin-bottom: 25px;
+}
+
+.subsidy-box-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #e2e8f0;
+  transition: background 0.35s ease, height 0.35s ease;
+}
+
+.subsidy-box-card:hover {
+  transform: translateY(-8px);
+  border-color: #f47629;
+  box-shadow: 0 16px 30px rgba(244, 118, 41, 0.16);
+}
+
+.subsidy-box-card:hover::before {
+  background: linear-gradient(90deg, #f47629 0%, #ea580c 100%);
+  height: 4px;
+}
+
+.subsidy-box-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #fff7ed;
+  border: 2px solid #ffedd5;
+  color: #f47629;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  transition: all 0.35s ease;
+}
+
+.subsidy-box-card:hover .subsidy-box-icon {
+  background: #f47629;
+  color: #ffffff;
+  border-color: #f47629;
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 6px 18px rgba(244, 118, 41, 0.35);
+}
+
+.subsidy-box-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+
+.subsidy-box-card:hover .subsidy-box-title {
+  color: #ea580c;
+}
+
+.subsidy-box-text {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.subsidy-box-text b {
+  color: #ea580c;
+  font-size: 16px;
+  font-weight: 800;
 }

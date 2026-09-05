@@ -4,16 +4,16 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Trusted by leading businesses across Uttar Pradesh — see who Liana Solar has served.">
+	<meta name="description" content="Actual solar installation photos and client sites powered by Liana Solar across Uttar Pradesh.">
 	<meta name="author" content="Liana Solar">
 	<link rel="icon" href="favicon.ico">
-	<title>Our Clients | Liana Solar</title>
+	<title>Our Clients — Solar Site Photos | Liana Solar</title>
 	<!-- Bootstrap core CSS -->
 	<link href="css/plugins/bootstrap.min.css" rel="stylesheet">
 	<link href="css/plugins/bootstrap-submenu.css" rel="stylesheet">
 	<link href="css/plugins/animate.min.css" rel="stylesheet">
 	<link href="css/plugins/slick.css" rel="stylesheet">
-	<link href="css/custom7b30.css?v=4" rel="stylesheet">
+	<link href="css/custom7b30.css?v=6" rel="stylesheet">
 	<link href="css/plugins/family-tree.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/plugins/font-awesome-4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/plugins/slickmap/slickmap.css">
@@ -28,6 +28,117 @@
 	<link href="iconfont/style.css" rel="stylesheet">
 	<!-- Google Fonts -->
 	<link href="../fonts.googleapis.com/css533c.css?family=Roboto:100,100i,300,400,500,700,900" rel="stylesheet">
+	<style>
+		/* Pure Client Photos Grid */
+		.client-gallery-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 24px;
+			margin-top: 20px;
+			margin-bottom: 50px;
+		}
+		@media (max-width: 991px) {
+			.client-gallery-grid {
+				grid-template-columns: repeat(2, 1fr);
+				gap: 16px;
+			}
+		}
+		@media (max-width: 575px) {
+			.client-gallery-grid {
+				grid-template-columns: 1fr;
+				gap: 14px;
+			}
+		}
+		.client-photo-item {
+			position: relative;
+			border-radius: 12px;
+			overflow: hidden;
+			background: #0f172a;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+			cursor: pointer;
+			aspect-ratio: 4 / 3;
+			transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+		.client-photo-item:hover {
+			transform: translateY(-6px);
+			box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+		}
+		.client-photo-item img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			transition: transform 0.4s ease;
+		}
+		.client-photo-item:hover img {
+			transform: scale(1.06);
+		}
+		.client-photo-overlay {
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(to top, rgba(15,23,42,0.7) 0%, rgba(15,23,42,0) 60%);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.client-photo-item:hover .client-photo-overlay {
+			opacity: 1;
+		}
+		.client-photo-zoom-icon {
+			width: 48px;
+			height: 48px;
+			background: #f47629;
+			color: #fff;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+			box-shadow: 0 4px 12px rgba(244,118,41,0.4);
+			transform: scale(0.8);
+			transition: transform 0.3s ease;
+		}
+		.client-photo-item:hover .client-photo-zoom-icon {
+			transform: scale(1);
+		}
+
+		/* Modal Lightbox */
+		.client-lightbox-modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(15, 23, 42, 0.95);
+			z-index: 99999;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+			backdrop-filter: blur(5px);
+		}
+		.client-lightbox-img {
+			max-width: 90vw;
+			max-height: 85vh;
+			border-radius: 10px;
+			box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+			object-fit: contain;
+		}
+		.client-lightbox-close {
+			position: absolute;
+			top: 25px;
+			right: 30px;
+			font-size: 32px;
+			color: #ffffff;
+			cursor: pointer;
+			transition: color 0.2s;
+		}
+		.client-lightbox-close:hover {
+			color: #f47629;
+		}
+	</style>
 </head>
 
 <body>
@@ -94,32 +205,7 @@
 						<li><a href="about.html"><span class="electric-btn"><span class="text">About
 										Us</span></span></a></li>
 						<li><a href="solar.html"><span class="electric-btn"><span class="text">Solar</span></span></a></li>
-						<li class="dropdown"><a href="services.html" data-toggle="dropdown" data-submenu=""><span
-									class="electric-btn"><span class="text">Services</span></span></a>
-							<!--<ul class="dropdown-menu" role="menu">
-								<li class="dropdown-submenu"> <a href="#" data-toggle="dropdown" data-submenu="">Commercial <span class="ecaret"></span></a>
-									<ul class="dropdown-menu">
-										<li><a href="#">Panels Changes</a></li>
-										<li><a href="#">Air Conditioning</a></li>
-										<li><a href="#">Security Systems</a></li>
-										<li><a href="#">Full-service layout</a></li>
-										<li><a href="#">Wiring and installation</a></li>
-										<li><a href="#">Emergency power</a></li>
-									</ul>
-								</li>
-								<li class="dropdown-submenu"> <a href="#">Industrial<span class="ecaret"></span></a>
-									<ul class="dropdown-menu">
-										<li><a href="#">Full-service layout</a></li>
-										<li><a href="#">Wiring and installation</a></li>
-										<li><a href="#">Emergency power</a></li>
-										<li><a href="#">Panels Changes</a></li>
-										<li><a href="#">Air Conditioning</a></li>
-										<li><a href="#">Security Systems</a></li>
-									</ul>
-								</li>
-								<li><a href="#">Residential</a></li>
-							</ul>-->
-						</li>
+						<li><a href="services.html"><span class="electric-btn"><span class="text">Services</span></span></a></li>
 						<li><a href="gallery.html"><span class="electric-btn"><span
 										class="text">Gallery</span></span></a>
 						</li>
@@ -154,14 +240,30 @@
 		<!-- Block -->
 		<div class="block block-content-top">
 			<div class="container">
-				<h1 class="text-center">Our <b>Clients</b></h1>
-				<div class="row" style="min-height: 250px;">
+				
+				<!-- Heading -->
+				<div style="margin-bottom: 25px;">
+					<h1 style="margin-bottom: 5px;">Our <b>Client Installations</b></h1>
+					<p class="font20" style="margin-bottom: 0; color: #64748b;">Solar installation site photos across Uttar Pradesh.</p>
 				</div>
+
+				<!-- Client Photos Dynamic Grid -->
+				<div id="clientPhotosGrid" class="client-gallery-grid">
+					<!-- Photos rendered dynamically via JS -->
+				</div>
+
 			</div>
 		</div>
 		<!-- //Block -->
 	</div>
 	<!-- // Content  -->
+
+	<!-- Lightbox Modal -->
+	<div id="lightboxModal" class="client-lightbox-modal" onclick="closeLightbox()">
+		<span class="client-lightbox-close">&times;</span>
+		<img id="lightboxImg" class="client-lightbox-img" src="" alt="Client Solar Site Full Photo" onclick="event.stopPropagation()">
+	</div>
+
 	<!-- Footer -->
 	<div class="page-footer">
 		<div class="back-to-top hidden-xs"><a href="#top"><span class="icon icon-lightning"></span></a></div>
@@ -237,11 +339,61 @@
 			</div>
 		</div>
 	</div>
-	<!-- //Footer -->
-
 	<script src="js/jquery.js"></script>
 	<script src="js/plugins/bootstrap.min.js"></script>
 	<script src="js/plugins/slick.min.js"></script>
 	<script src="js/custom.js"></script>
+	<script src="js/site-data-manager.js"></script>
+	<script src="js/clients-manager.js"></script>
+	<script>
+		function renderClientPhotos() {
+			const container = document.getElementById("clientPhotosGrid");
+			if (!container) return;
+
+			const photos = getClientPhotos();
+
+			if (photos.length === 0) {
+				container.innerHTML = `
+					<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+						<div style="font-size: 44px; color: #cbd5e1; margin-bottom: 12px;"><i class="fa fa-picture-o"></i></div>
+						<h4 style="color: #64748b; font-weight: 600;">Client project gallery updating soon.</h4>
+					</div>
+				`;
+				return;
+			}
+
+			container.innerHTML = photos.map((p, idx) => `
+				<div class="client-photo-item" onclick="openLightbox('${p.image}')">
+					<img src="${p.image}" alt="Client Solar Installation Site" onerror="this.src='images/solar/hero-rooftop-home.jpg'">
+					<div class="client-photo-overlay">
+						<div class="client-photo-zoom-icon">
+							<i class="fa fa-search-plus"></i>
+						</div>
+					</div>
+				</div>
+			`).join("");
+		}
+
+		function openLightbox(src) {
+			const modal = document.getElementById("lightboxModal");
+			const img = document.getElementById("lightboxImg");
+			img.src = src;
+			modal.style.display = "flex";
+		}
+
+		function closeLightbox() {
+			const modal = document.getElementById("lightboxModal");
+			modal.style.display = "none";
+		}
+
+		// Close on Escape key
+		document.addEventListener("keydown", (e) => {
+			if (e.key === "Escape") closeLightbox();
+		});
+
+		window.addEventListener("DOMContentLoaded", () => {
+			renderClientPhotos();
+		});
+	</script>
 </body>
 </html>

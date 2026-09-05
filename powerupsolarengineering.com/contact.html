@@ -195,43 +195,103 @@
 					</div>
 					<div class="col-sm-1 visible-lg"></div>
 					<div class="col-sm-7 col-md-8">
-						<iframe
-							src="https://docs.google.com/forms/d/e/1FAIpQLSf9htAIDm-4TzXtrTkc2tw5GggWm0DSs_uprfbhr2y16lTU2Q/viewform?embedded=true"
-							width="700" height="890" frameborder="0" marginheight="0" marginwidth="0"
-							scrolling="no">Loading...</iframe>
-						<!--<form id="contactform" class="contact-form" name="contactform" method="post" novalidate>
-							<div id="success">
-								<p>Your message was sent successfully!</p>
+						<div class="contact-form-container" style="background: #ffffff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;">
+							<div style="margin-bottom: 25px;">
+								<h3 style="font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 8px;">Request a Free Solar Quote</h3>
+								<p style="color: #64748b; font-size: 14px; margin-bottom: 0;">Fill out this form for a complimentary site assessment, subsidy calculation, and customized engineering proposal.</p>
 							</div>
-							<div id="error">
-								<p>Something went wrong, try refreshing and submitting the form again.</p>
+
+							<!-- Success Message Card -->
+							<div id="contactSuccessMsg" style="display: none; background: #ecfdf5; border: 2px solid #10b981; border-radius: 10px; padding: 25px; text-align: center; margin-bottom: 20px;">
+								<div style="font-size: 48px; color: #10b981; margin-bottom: 12px;"><i class="fa fa-check-circle"></i></div>
+								<h3 style="color: #065f46; font-weight: 800; margin-top: 0; margin-bottom: 8px;">Inquiry Received &amp; Sent to WhatsApp!</h3>
+								<p style="color: #047857; font-size: 15px; margin-bottom: 18px;">Thank you, <strong id="successName">Customer</strong>! Your solar inquiry has been logged with reference ID <strong id="successRef">#SUB</strong> and forwarded to our engineering team.</p>
+								<div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+									<a id="successWaBtn" href="https://wa.me/917248008008" target="_blank" class="btn" style="background: #25d366; color: #fff; border: none; font-weight: 700; border-radius: 6px; padding: 12px 24px; font-size: 15px;">
+										<i class="fa fa-whatsapp"></i> Open WhatsApp (+91 724 8008008)
+									</a>
+									<button type="button" class="btn btn-border" onclick="resetContactForm()" style="border-radius: 6px; padding: 12px 20px;">
+										<span>Submit Another Request</span>
+									</button>
+								</div>
+								<div style="margin-top: 10px; font-size: 12px; color: #047857;">If WhatsApp did not open automatically, click the green button above to send your details.</div>
 							</div>
-							<div class="inputs-col">
+
+							<!-- The Interactive Form -->
+							<form id="solarContactForm" onsubmit="handleContactSubmit(event)">
 								<div class="row">
-									<div class="col-md-6">
-										<div class="input-wrapper">
-											<label>Name <span class="required">*</span></label>
-											<input type="text" class="input-custom input-full" name="name" placeholder="Your name">
+									<div class="col-sm-6">
+										<div class="form-group" style="margin-bottom: 18px;">
+											<label style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; display: block;">Full Name <span style="color: #ef4444;">*</span></label>
+											<input type="text" id="custName" class="form-control" required placeholder="e.g. Rajesh Sharma" style="height: 46px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px;">
 										</div>
 									</div>
-									<div class="col-md-6">
-										<div class="input-wrapper">
-											<label>Phone</label>
-											<input type="text" class="input-custom input-full" name="phone" placeholder="724 8008008 (10 digits)">
+									<div class="col-sm-6">
+										<div class="form-group" style="margin-bottom: 18px;">
+											<label style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; display: block;">Mobile Number <span style="color: #ef4444;">*</span></label>
+											<div style="display: flex;">
+												<span style="background: #f1f5f9; border: 1px solid #cbd5e1; border-right: none; border-radius: 8px 0 0 8px; padding: 0 12px; display: flex; align-items: center; color: #475569; font-weight: 600; font-size: 14px;">+91</span>
+												<input type="tel" id="custPhone" class="form-control" required pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number" style="height: 46px; border-radius: 0 8px 8px 0; border: 1px solid #cbd5e1; font-size: 14px;">
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="input-wrapper">
-									<label>Email <span class="required">*</span></label>
-									<input type="text" class="input-custom input-full" name="email" placeholder="Enter a valid email id">
+
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="margin-bottom: 18px;">
+											<label style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; display: block;">Email Address</label>
+											<input type="email" id="custEmail" class="form-control" placeholder="name@domain.com" style="height: 46px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px;">
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group" style="margin-bottom: 18px;">
+											<label style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; display: block;">City / District in UP <span style="color: #ef4444;">*</span></label>
+											<input type="text" id="custCity" class="form-control" required placeholder="e.g. Lucknow, Kanpur, Varanasi" style="height: 46px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px;">
+										</div>
+									</div>
 								</div>
-							</div>
-							<div>
-								<label>Message <span class="required">*</span></label>
-								<textarea class="textarea-custom input-full" name="message"></textarea>
-							</div>
-							<button type="submit" id="submit" class="btn btn-border"><i class="icon icon-lightning"></i><span>Send Message</span></button>
-						</form>-->
+
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="margin-bottom: 18px;">
+											<label style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; display: block;">Solar System Required <span style="color: #ef4444;">*</span></label>
+											<select id="custSystem" class="form-control" required style="height: 46px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px;">
+												<option value="Residential Rooftop (PM Surya Ghar)">Home Rooftop Solar (PM Surya Ghar Subsidy)</option>
+												<option value="Commercial & Industrial (C&I Solar)">Commercial &amp; Industrial Solar Plant</option>
+												<option value="Solar Atta Chakki / Flour Mill">Solar Atta Chakki (Flour Mill VFD)</option>
+												<option value="Hybrid Solar with Battery Backup">Hybrid Solar (Grid + Battery 24/7)</option>
+												<option value="Off-Grid Solar System">Off-Grid Solar (Stand-alone battery)</option>
+												<option value="Solar Plant O&M / Cleaning">Solar Plant Cleaning &amp; AMC</option>
+												<option value="Electrical EPC Contracting">Electrical Contracting / Panel Works</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group" style="margin-bottom: 18px;">
+											<label style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; display: block;">Monthly Electricity Bill / Capacity</label>
+											<select id="custBill" class="form-control" style="height: 46px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px;">
+												<option value="Under ₹2,000 / month (2 kW)">Under ₹2,000 / month (~2 kW System)</option>
+												<option value="₹2,000 – ₹5,000 / month (3 kW)">₹2,000 – ₹5,000 / month (~3 kW System)</option>
+												<option value="₹5,000 – ₹10,000 / month (5 kW - 8 kW)">₹5,000 – ₹10,000 / month (~5 to 8 kW System)</option>
+												<option value="₹10,000 – ₹30,000 / month (10 kW+)">₹10,000 – ₹30,000 / month (~10 kW+ System)</option>
+												<option value="₹30,000+ / month (C&I / MW Scale)">₹30,000+ / month (Commercial / MW Plant)</option>
+												<option value="Solar Atta Chakki (10 HP - 25 HP)">Solar Atta Chakki (10 HP – 25 HP)</option>
+											</select>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group" style="margin-bottom: 22px;">
+									<label style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; display: block;">Additional Details / Message</label>
+									<textarea id="custMessage" class="form-control" rows="3" placeholder="Tell us about your rooftop area, existing power connection, or specific preferences..." style="border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; resize: vertical;"></textarea>
+								</div>
+
+								<button type="submit" id="submitBtn" class="btn" style="width: 100%; height: 50px; font-size: 16px; font-weight: 700; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+									<i class="icon icon-lightning"></i> <span>Submit Inquiry &amp; Get Free Quote</span>
+								</button>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -262,7 +322,7 @@
 					</div>
 					<div class="hidden-xs">
 						<div class="copyright">© 2026 Liana Solar.
-							<br> All Rights Reserved
+							<br> All Rights Reserved • <a href="admin.html" style="color: #64748b; font-size: 11px; text-decoration: none;"><i class="fa fa-lock"></i> Admin</a>
 						</div>
 						<div class="social-links">
 							<ul>
@@ -320,9 +380,71 @@
 	<script src="js/jquery.js"></script>
 	<script src="js/plugins/bootstrap.min.js"></script>
 	<script src="js/plugins/slick.min.js"></script>
-	<script src="js/plugins/jquery.form.js"></script>
-	<script src="js/plugins/jquery.validate.min.js"></script>
+	<script src="js/site-data-manager.js"></script>
 	<script src="js/custom.js"></script>
+
+	<script>
+		function handleContactSubmit(e) {
+			e.preventDefault();
+			const submitBtn = document.getElementById("submitBtn");
+			const origText = submitBtn.innerHTML;
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Submitting & Opening WhatsApp...';
+
+			const formData = {
+				name: document.getElementById("custName").value.trim(),
+				phone: document.getElementById("custPhone").value.trim(),
+				email: document.getElementById("custEmail").value.trim(),
+				city: document.getElementById("custCity").value.trim(),
+				systemType: document.getElementById("custSystem").value,
+				bill: document.getElementById("custBill").value,
+				message: document.getElementById("custMessage").value.trim()
+			};
+
+			// 1. Save to Local & Server Admin Database
+			const saved = addContactSubmission(formData);
+
+			// 2. Prepare Formatted WhatsApp Message
+			const waMessage = 
+`☀️ *NEW SOLAR INQUIRY — LIANA SOLAR*
+━━━━━━━━━━━━━━━━━━━━━
+👤 *Customer Name:* ${formData.name}
+📱 *Mobile Number:* +91 ${formData.phone}
+📍 *City / District:* ${formData.city}
+⚡ *System Required:* ${formData.systemType}
+💡 *Electricity Bill:* ${formData.bill}
+${formData.email ? `✉️ *Email:* ${formData.email}\n` : ''}${formData.message ? `📝 *Notes:* ${formData.message}\n` : ''}━━━━━━━━━━━━━━━━━━━━━
+_Please provide rooftop feasibility & subsidy estimate._`;
+
+			const targetWhatsAppNumber = "917248008008";
+			const waUrl = `https://api.whatsapp.com/send?phone=${targetWhatsAppNumber}&text=${encodeURIComponent(waMessage)}`;
+
+			// 3. Open WhatsApp in new tab / app
+			try {
+				window.open(waUrl, '_blank');
+			} catch (err) {
+				console.log("Auto popup prevented, user can click button", err);
+			}
+
+			// 4. Update UI to show Success Card
+			setTimeout(() => {
+				document.getElementById("solarContactForm").style.display = "none";
+				document.getElementById("contactSuccessMsg").style.display = "block";
+				document.getElementById("successName").innerText = formData.name;
+				document.getElementById("successRef").innerText = "#" + (saved.id ? saved.id.replace("sub-", "") : "SUB" + Date.now().toString().slice(-4));
+				document.getElementById("successWaBtn").href = waUrl;
+
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = origText;
+			}, 400);
+		}
+
+		function resetContactForm() {
+			document.getElementById("solarContactForm").reset();
+			document.getElementById("solarContactForm").style.display = "block";
+			document.getElementById("contactSuccessMsg").style.display = "none";
+		}
+	</script>
 
 </body>
 </html>
