@@ -146,48 +146,83 @@
 	<!-- // Header -->
 	<!-- Content  -->
 	<div id="page-content">
-		<!-- Slider -->
-		<div class="slider-wrapper theme-default">
-			<div id="slider" class="nivoSlider"> <img src="images/slider/slide1.jpg" title="#htmlcaption1"
-					data-thumb="images/slider/slide1.jpg" alt="" /> <img src="images/slider/slide2.jpg"
-					title="#htmlcaption2" data-thumb="images/slider/slide2.jpg" alt="" /> <img
-					src="images/slider/slide3.jpg" title="#htmlcaption3" data-thumb="images/slider/slide3.jpg" alt="" />
-			</div>
-			<div id="htmlcaption1" class="nivo-caption">
-				<div class="vert-wrapper">
-					<div class="vert">
-						<div class="text text1">Power Your Home
-							<br>With <b>The Sun</b>
+		<!-- Main Hero Video & Image Slider -->
+		<div class="slider-wrapper hero-video-slider-wrap" id="heroSliderWrap">
+			<div class="hero-slider" id="heroSlider">
+				
+				<!-- Slide 1: Slow-Motion Video Slide -->
+				<div class="hero-slide active" data-slide="0" data-type="video">
+					<div class="hero-media-container">
+						<video id="heroSlideVideo" class="hero-media-video" playsinline muted autoplay loop="false" preload="auto">
+							<source src="images/vedio.mp4" type="video/mp4">
+						</video>
+						<div class="hero-slide-overlay"></div>
+					</div>
+					<div class="hero-slide-caption">
+						<div class="vert-wrapper">
+							<div class="vert">
+								<div class="text text1">Power Your Home
+									<br>With <b>The Sun</b>
+								</div>
+								<div class="text text2 margin-bottom"><i class="fa fa-star" style="color: #ffc107; margin-right: 8px;"></i>Claim up to ₹1,08,000 subsidy</div>
+								<div class="text text3"><a href="solar.html" class="btn btn-lg"><i class="icon icon-lightning"></i><span>Explore Solar</span></a></div>
+							</div>
 						</div>
-						<div class="text text2 margin-bottom"><i class="fa fa-star" style="color: #ffc107; margin-right: 8px;"></i>Claim up to ₹1,08,000 subsidy</div>
-						<div class="text text3"><a href="solar.html" class="btn btn-lg"><i class="icon icon-lightning"></i><span>Explore Solar</span></a></div>
 					</div>
 				</div>
-			</div>
-			<div id="htmlcaption2" class="nivo-caption">
-				<div class="vert-wrapper">
-					<div class="vert">
-						<div class="text text1">Premium Solar
-							<br><b>Rooftop Solutions</b>
+
+				<!-- Slide 2: High Efficiency Rooftop Slide -->
+				<div class="hero-slide" data-slide="1" data-type="image" data-duration="6000">
+					<div class="hero-media-container">
+						<img src="images/slider/slide2.jpg" alt="Solar Rooftop Solutions" class="hero-media-img" />
+						<div class="hero-slide-overlay"></div>
+					</div>
+					<div class="hero-slide-caption">
+						<div class="vert-wrapper">
+							<div class="vert">
+								<div class="text text1">Premium Solar
+									<br><b>Rooftop Solutions</b>
+								</div>
+								<div class="text text2">High-efficiency modules. 25-year warranty. Trusted engineering.</div>
+								<div class="text text3"><a href="solar.html" class="btn btn-lg"><i class="icon icon-lightning"></i><span>Explore Solutions</span></a></div>
+							</div>
 						</div>
-						<div class="text text2">High-efficiency modules. 25-year warranty. Trusted engineering.</div>
-						<div class="text text3"><a href="solar.html" class="btn btn-lg"><i class="icon icon-lightning"></i><span>Explore Solutions</span></a></div>
 					</div>
 				</div>
-			</div>
-			<div id="htmlcaption3" class="nivo-caption">
-				<div class="vert-wrapper">
-					<div class="vert">
-						<div class="text text1">PM Surya Ghar
-							<br><b>Muft Bijli Yojana</b>
+
+				<!-- Slide 3: PM Surya Ghar Scheme Slide -->
+				<div class="hero-slide" data-slide="2" data-type="image" data-duration="6000">
+					<div class="hero-media-container">
+						<img src="images/slider/slide3.jpg" alt="PM Surya Ghar Yojana" class="hero-media-img" />
+						<div class="hero-slide-overlay"></div>
+					</div>
+					<div class="hero-slide-caption">
+						<div class="vert-wrapper">
+							<div class="vert">
+								<div class="text text1">PM Surya Ghar
+									<br><b>Muft Bijli Yojana</b>
+								</div>
+								<div class="text text2">Up to 300 free units a month. We handle all the paperwork.</div>
+								<div class="text text3"><a href="solar.html#schemes" class="btn btn-lg"><i class="icon icon-lightning"></i><span>Claim Subsidy</span></a></div>
+							</div>
 						</div>
-						<div class="text text2">Up to 300 free units a month. We handle all the paperwork.</div>
-						<div class="text text3"><a href="solar.html#schemes" class="btn btn-lg"><i class="icon icon-lightning"></i><span>Claim Subsidy</span></a></div>
 					</div>
 				</div>
+
+			</div>
+
+			<!-- Navigation Arrows -->
+			<a href="javascript:void(0)" class="hero-nav-arrow hero-nav-prev" id="heroPrev" aria-label="Previous Slide"><i class="icon icon-arrow-left"></i></a>
+			<a href="javascript:void(0)" class="hero-nav-arrow hero-nav-next" id="heroNext" aria-label="Next Slide"><i class="icon icon-arrow-right"></i></a>
+
+			<!-- Indicators / Dots -->
+			<div class="hero-indicators" id="heroIndicators">
+				<button class="hero-dot active" data-index="0" aria-label="Slide 1"></button>
+				<button class="hero-dot" data-index="1" aria-label="Slide 2"></button>
+				<button class="hero-dot" data-index="2" aria-label="Slide 3"></button>
 			</div>
 		</div>
-		<!-- Slider -->
+		<!-- // Main Hero Video & Image Slider -->
 		<!-- Request Block
 		<div class="block block-negative">
 			<div class="container">
@@ -673,6 +708,7 @@
 	<script src="js/plugins/imagesloaded.pkgd.min.js"></script>
 	<script src="js/plugins/isotope.pkgd.min.js"></script>
 	<script src="js/site-data-manager.js"></script>
+	<script src="js/hero-slider.js"></script>
 	<script src="js/custom.js"></script>
 
 </body>
