@@ -3024,7 +3024,7 @@ Skin Name: Nivo Slider Default Theme
     transform: skew(16deg, 0);
     overflow: hidden;
     display: block;
-    width: 33.333333%;
+    width: 25%;
     height: 100%;
     position: relative;
     float: left;
@@ -3057,13 +3057,14 @@ Skin Name: Nivo Slider Default Theme
   }
   .skew-wrapper .skew .straight-image {
     background-position: center;
-    background-repeat: repeat;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   .skew-wrapper .skew.min {
-    width: 25%;
+    width: 18%;
   }
   .skew-wrapper .skew.active {
-    width: 50%;
+    width: 46%;
     z-index: 99;
   }
   .skew-wrapper .straight-image {
@@ -3084,9 +3085,9 @@ Skin Name: Nivo Slider Default Theme
   }
   .skew-wrapper .straight .title {
     display: block;
-    margin-bottom: 20px;
-    font-size: 38px;
-    line-height: 40px;
+    margin-bottom: 15px;
+    font-size: 26px;
+    line-height: 30px;
     font-weight: 500;
     letter-spacing: 0.01em;
     color: #fff;
@@ -3615,7 +3616,10 @@ Skin Name: Nivo Slider Default Theme
   backface-visibility: hidden;
   image-rendering: optimizeQuality;
   -webkit-transform: translateZ(0) scale(1, 1);
-  margin-bottom: 4px;
+  margin-bottom: 15px;
+  max-width: 370px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .bulb-block .bulb:after {
   content: '';
@@ -3627,30 +3631,50 @@ Skin Name: Nivo Slider Default Theme
   bottom: 5px;
   background-color: #252936;
 }
-.bulb-block .bulb .bulb-img img,
+.bulb-block .bulb .bulb-img {
+  position: absolute;
+  top: 4%;
+  left: 7%;
+  width: 86%;
+  height: 64%;
+  z-index: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bulb-block .bulb .bulb-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.95;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -ms-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.bulb-block .bulb .bulb-mask {
+  position: relative;
+  width: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
 .bulb-block .bulb .bulb-mask img {
   width: 100%;
+  height: auto;
+  display: block;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   image-rendering: optimizeQuality;
   -webkit-transform: translateZ(0) scale(1, 1);
 }
-.bulb-block .bulb .bulb-img img {
-  opacity: 0.4;
-  -webkit-transition: opacity 0.5s ease-in-out 0s;
-  -moz-transition: opacity 0.5s ease-in-out 0s;
-  -ms-transition: opacity 0.5s ease-in-out 0s;
-  -o-transition: opacity 0.5s ease-in-out 0s;
-}
-.bulb-block .bulb .bulb-mask {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  top: 0;
-}
 .bulb-block:hover .bulb-img img {
   opacity: 1;
+  transform: scale(1.05);
 }
 .bulb-block .bulb-block-title,
 .bulb-block .bulb-block-text {
