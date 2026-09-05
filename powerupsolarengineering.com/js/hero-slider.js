@@ -1,10 +1,10 @@
 /**
  * Liana Solar - Hero Video & Image Slider
  * Features:
- * - Slide 1: Video (vedio.mp4) playing in smooth slow-motion (0.65x speed)
+ * - Slide 1: Video (vedio.mp4) playing in super smooth cinematic SLOW MOTION (0.5x speed)
  * - Slide 2: High-res image (slide2.jpg)
  * - Slide 3: High-res image (slide3.jpg)
- * - Automatic progression from video -> slide 2 -> slide 3 -> loop back
+ * - Automatic progression from video -> slide 2 -> slide 3 -> loop back to video
  * - Manual controls (Prev / Next arrows, Indicator dots, Touch Swipe)
  * - Dynamic caption animation on slide change
  */
@@ -27,31 +27,46 @@
 		var currentIndex = 0;
 		var slideTimer = null;
 		var isTransitioning = false;
-		var slowPlaybackRate = 0.65; // User requested: slow motion playback
+		var SLOW_SPEED = 0.5; // Smooth slow motion (0.5x speed)
 
-		// Initialize Video settings
+		// Set and enforce slow playback rate on video
+		function enforceSlowSpeed() {
+			if (!video) return;
+			try {
+				if (video.playbackRate !== SLOW_SPEED) {
+					video.playbackRate = SLOW_SPEED;
+				}
+				if (video.defaultPlaybackRate !== SLOW_SPEED) {
+					video.defaultPlaybackRate = SLOW_SPEED;
+				}
+			} catch (e) {}
+		}
+
+		// Initialize Video settings & event listeners
 		if (video) {
-			video.playbackRate = slowPlaybackRate;
 			video.muted = true;
+			video.setAttribute('muted', '');
 			video.setAttribute('playsinline', '');
 			video.setAttribute('webkit-playsinline', '');
+			enforceSlowSpeed();
 
-			// When video metadata is loaded, make sure playback rate is locked to slow speed
-			video.addEventListener('loadedmetadata', function () {
-				video.playbackRate = slowPlaybackRate;
+			// Continuously lock playback speed to slow motion
+			['loadstart', 'loadedmetadata', 'loadeddata', 'canplay', 'play', 'playing'].forEach(function (evtName) {
+				video.addEventListener(evtName, enforceSlowSpeed);
 			});
 
-			// When video ends, automatically advance to Slide 2
+			// When video finishes, advance to Slide 2
 			video.addEventListener('ended', function () {
 				if (currentIndex === 0) {
 					goToSlide(1);
 				}
 			});
 
-			// If video stalls or loops, monitor time
+			// Backup time monitor in case browser loops or stalls at end
 			video.addEventListener('timeupdate', function () {
+				enforceSlowSpeed();
 				if (currentIndex === 0 && video.duration > 0) {
-					if (video.currentTime >= video.duration - 0.2) {
+					if (video.currentTime >= video.duration - 0.25) {
 						goToSlide(1);
 					}
 				}
@@ -69,8 +84,7 @@
 			var texts = slideEl.querySelectorAll('.text');
 			texts.forEach(function (el) {
 				el.style.animation = 'none';
-				// Force reflow
-				void el.offsetWidth;
+				void el.offsetWidth; // Force reflow
 				el.style.animation = '';
 			});
 		}
@@ -109,41 +123,49 @@
 
 			currentIndex = targetIndex;
 
-			// Handle slide actions
+			// Handle slide specific behavior
 			var currentSlide = slides[currentIndex];
 			var slideType = currentSlide.getAttribute('data-type');
 
 			if (slideType === 'video' && video) {
 				try {
 					video.currentTime = 0;
-					video.playbackRate = slowPlaybackRate;
+					enforceSlowSpeed();
 					var playPromise = video.play();
 					if (playPromise !== undefined) {
-						playPromise.catch(function (err) {
-							console.log('Video autoplay fallback:', err);
-							// Fallback timer if browser blocked autoplay
+						playPromise.then(function () {
+							enforceSlowSpeed();
+						}).catch(function (err) {
+							console.log('Autoplay info:', err);
+							// Fallback timer if autoplay is blocked
 							slideTimer = setTimeout(function () {
-								goToSlide(currentIndex + 1);
-							}, 8000);
+								if (currentIndex === 0) goToSlide(1);
+							}, 10000);
 						});
 					}
 				} catch (e) {
 					console.warn(e);
 				}
 
-				// Fallback timer in case video ended event doesn't fire
-				var estDuration = (video.duration && !isNaN(video.duration)) ? (video.duration / slowPlaybackRate * 1000) + 500 : 9000;
+				// Fallback safety timer: video duration / SLOW_SPEED + safety margin
+				var maxVideoWait = (video.duration && !isNaN(video.duration) && video.duration > 0)
+					? ((video.duration / SLOW_SPEED) * 1000) + 600
+					: 11000;
+
 				slideTimer = setTimeout(function () {
 					if (currentIndex === 0) {
 						goToSlide(1);
 					}
-				}, Math.min(Math.max(estDuration, 6000), 12000));
+				}, Math.min(Math.max(maxVideoWait, 7000), 16000));
 
 			} else {
-				// Image slide: Pause video to save CPU/GPU
+				// Image slides: pause video to save resources
 				if (video) {
-					video.pause();
+					try {
+						video.pause();
+					} catch (e) {}
 				}
+
 				var duration = parseInt(currentSlide.getAttribute('data-duration'), 10) || 6000;
 				slideTimer = setTimeout(function () {
 					goToSlide(currentIndex + 1);
@@ -152,7 +174,7 @@
 
 			setTimeout(function () {
 				isTransitioning = false;
-			}, 800);
+			}, 700);
 		}
 
 		// Button events
@@ -178,7 +200,7 @@
 			});
 		});
 
-		// Touch swipe support
+		// Touch swipe support for mobile
 		var touchStartX = 0;
 		var touchEndX = 0;
 		sliderWrap.addEventListener('touchstart', function (e) {
@@ -190,9 +212,9 @@
 			var diff = touchStartX - touchEndX;
 			if (Math.abs(diff) > 45) {
 				if (diff > 0) {
-					goToSlide(currentIndex + 1); // swipe left -> next
+					goToSlide(currentIndex + 1); // swipe left -> next slide
 				} else {
-					goToSlide(currentIndex - 1); // swipe right -> prev
+					goToSlide(currentIndex - 1); // swipe right -> prev slide
 				}
 			}
 		}, { passive: true });
