@@ -309,7 +309,7 @@ if ($action === 'save_leads' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
         exit;
     }
-    $input = json_decode(file_get_contents('php://input'), true);
+        $input = json_decode(file_get_contents('php://input'), true);
     if (!is_array($input)) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
