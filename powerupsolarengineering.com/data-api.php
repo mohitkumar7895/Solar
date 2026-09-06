@@ -7,13 +7,11 @@
  * 3. Contact Leads & Submissions
  */
 
-<?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 require_once __DIR__ . '/db.php';
-?>
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -60,17 +58,23 @@ function saveBase64Image($base64Data, $uploadsDir, $prefix = 'img') {
 // 1. GET ALL DATA (FOR LIVE VISITORS & ADMIN SYNC)
 // -----------------------------------------------------------------------------
 if ($action === 'get_all' || $_SERVER['REQUEST_METHOD'] === 'GET') {
-    $photosFile = $dataDir . '/client_photos.json';
-    $ecosystemFile = $dataDir . '/ecosystem_brands.json';
-    $leadsFile = $dataDir . '/contact_submissions.json';
-    $logoFile = $dataDir . '/site_logo.json';
-    $themeFile = $dataDir . '/site_theme.json';
-
-    $photos = file_exists($photosFile) ? json_decode(file_get_contents($photosFile), true) : null;
-    $ecosystem = file_exists($ecosystemFile) ? json_decode(file_get_contents($ecosystemFile), true) : null;
-    $leads = file_exists($leadsFile) ? json_decode(file_get_contents($leadsFile), true) : null;
-    $logo = file_exists($logoFile) ? json_decode(file_get_contents($logoFile), true) : null;
-    $theme = file_exists($themeFile) ? json_decode(file_get_contents($themeFile), true) : null;
+    $db = DB::getConnection();
+    // Fetch client photos
+    $stmt = $db->query('SELECT * FROM client_photos');
+    $photos = $stmt->fetchAll();
+    // Fetch ecosystem brands
+    $stmt = $db->query('SELECT * FROM ecosystem_brands');
+    $ecosystem = $stmt->fetchAll();
+    // Fetch contact submissions
+    $stmt = $db->query('SELECT * FROM contact_submissions ORDER BY date DESC, time DESC');
+    $leads = $stmt->fetchAll();
+    // Fetch site logo
+    $stmt = $db->query('SELECT imageUrl, altText FROM site_logo LIMIT 1');
+    $logo = $stmt->fetch();
+    // Fetch site theme
+    $stmt = $db->query('SELECT data FROM site_theme LIMIT 1');
+    $themeRow = $stmt->fetch();
+    $theme = $themeRow ? json_decode($themeRow['data'], true) : null;
 
     echo json_encode([
         'status' => 'success',
@@ -96,10 +100,9 @@ if ($action === 'save_theme' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
         exit;
     }
-
-    $themeFile = $dataDir . '/site_theme.json';
-    @file_put_contents($themeFile, json_encode($input, JSON_PRETTY_PRINT));
-
+    $db = DB::getConnection();
+    $stmt = $db->prepare('INSERT INTO site_theme (id, data) VALUES (1, :data) ON DUPLICATE KEY UPDATE data = VALUES(data)');
+    $stmt->execute([':data' => json_encode($input)]);
     echo json_encode(['status' => 'success', 'message' => 'Theme saved live on server', 'data' => $input]);
     exit;
 }
@@ -119,8 +122,12 @@ if ($action === 'save_logo' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $input['imageUrl'] = saveBase64Image($input['imageUrl'], $uploadsDir, 'site_logo');
     }
 
-    $logoFile = $dataDir . '/site_logo.json';
-    @file_put_contents($logoFile, json_encode($input, JSON_PRETTY_PRINT));
+    $db = DB::getConnection();
+    $stmt = $db->prepare('INSERT INTO site_logo (id, imageUrl, altText) VALUES (1, :url, :alt) ON DUPLICATE KEY UPDATE imageUrl = VALUES(imageUrl), altText = VALUES(altText)');
+    $stmt->execute([
+        ':url' => $input['imageUrl'] ?? null,
+        ':alt' => $input['altText'] ?? null
+    ]);
 
     echo json_encode(['status' => 'success', 'message' => 'Logo saved live on server', 'data' => $input]);
     exit;
@@ -136,17 +143,23 @@ if ($action === 'save_photos' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
         exit;
     }
-
-    // Convert any base64 images into physical files for high performance
+    // Convert any base64 images into physical files
     foreach ($input as &$item) {
         if (!empty($item['image']) && strpos($item['image'], 'data:image') !== false) {
             $item['image'] = saveBase64Image($item['image'], $uploadsDir, 'client_site');
         }
     }
-
-    $photosFile = $dataDir . '/client_photos.json';
-    @file_put_contents($photosFile, json_encode($input, JSON_PRETTY_PRINT));
-
+    $db = DB::getConnection();
+    // Clear existing photos and insert new set
+    $db->exec('DELETE FROM client_photos');
+    $stmt = $db->prepare('INSERT INTO client_photos (title, image, description) VALUES (:title, :image, :desc)');
+    foreach ($input as $photo) {
+        $stmt->execute([
+            ':title' => $photo['title'] ?? null,
+            ':image' => $photo['image'] ?? null,
+            ':desc' => $photo['description'] ?? null
+        ]);
+    }
     echo json_encode(['status' => 'success', 'message' => 'Photos saved live on server', 'data' => $input]);
     exit;
 }
@@ -161,17 +174,22 @@ if ($action === 'save_ecosystem' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
         exit;
     }
-
     // Convert logo base64 to file
     foreach ($input as &$brand) {
         if (!empty($brand['logo']) && strpos($brand['logo'], 'data:image') !== false) {
             $brand['logo'] = saveBase64Image($brand['logo'], $uploadsDir, 'brand_logo');
         }
     }
-
-    $ecosystemFile = $dataDir . '/ecosystem_brands.json';
-    @file_put_contents($ecosystemFile, json_encode($input, JSON_PRETTY_PRINT));
-
+    $db = DB::getConnection();
+    $db->exec('DELETE FROM ecosystem_brands');
+    $stmt = $db->prepare('INSERT INTO ecosystem_brands (brandName, logo, info) VALUES (:name, :logo, :info)');
+    foreach ($input as $b) {
+        $stmt->execute([
+            ':name' => $b['brandName'] ?? null,
+            ':logo' => $b['logo'] ?? null,
+            ':info' => $b['info'] ?? null
+        ]);
+    }
     echo json_encode(['status' => 'success', 'message' => 'Ecosystem brands saved live on server', 'data' => $input]);
     exit;
 }
@@ -181,9 +199,6 @@ if ($action === 'save_ecosystem' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 // -----------------------------------------------------------------------------
 if ($action === 'submit_lead' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
-    $leadsFile = $dataDir . '/contact_submissions.json';
-    $leads = file_exists($leadsFile) ? (json_decode(file_get_contents($leadsFile), true) ?: []) : [];
-
     $newLead = [
         'id' => 'sub-' . round(microtime(true) * 1000),
         'name' => htmlspecialchars($input['name'] ?? 'Anonymous'),
@@ -197,16 +212,26 @@ if ($action === 'submit_lead' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         'time' => date('H:i'),
         'status' => 'new'
     ];
-
-    array_unshift($leads, $newLead);
-    @file_put_contents($leadsFile, json_encode($leads, JSON_PRETTY_PRINT));
-
+    $db = DB::getConnection();
+    $stmt = $db->prepare('INSERT INTO contact_submissions (id, name, phone, email, city, systemType, bill, message, date, time, status) VALUES (:id, :name, :phone, :email, :city, :systemType, :bill, :message, :date, :time, :status)');
+    $stmt->execute([
+        ':id' => $newLead['id'],
+        ':name' => $newLead['name'],
+        ':phone' => $newLead['phone'],
+        ':email' => $newLead['email'],
+        ':city' => $newLead['city'],
+        ':systemType' => $newLead['systemType'],
+        ':bill' => $newLead['bill'],
+        ':message' => $newLead['message'],
+        ':date' => $newLead['date'],
+        ':time' => $newLead['time'],
+        ':status' => $newLead['status']
+    ]);
     // Optional email dispatch
     $to = 'lianasolar@gmail.com';
     $subject = "☀️ New Solar Inquiry from {$newLead['name']} ({$newLead['city']})";
     $emailBody = "Name: {$newLead['name']}\nPhone: {$newLead['phone']}\nCity: {$newLead['city']}\nSystem: {$newLead['systemType']}\nBill: {$newLead['bill']}\nMessage: {$newLead['message']}\n";
     @mail($to, $subject, $emailBody, "From: no-reply@lianasolar.com\r\n");
-
     echo json_encode(['status' => 'success', 'lead' => $newLead]);
     exit;
 }
