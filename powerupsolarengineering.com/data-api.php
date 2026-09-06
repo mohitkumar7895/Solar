@@ -1,4 +1,7 @@
 <?php
+session_start();
+// Load admin PIN from environment or default
+$ADMIN_PIN = getenv('ADMIN_PIN') ?: '1234';
 /**
  * Liana Solar - Unified Server Data API
  * Handles permanent storage for:
@@ -57,7 +60,36 @@ function saveBase64Image($base64Data, $uploadsDir, $prefix = 'img') {
 // -----------------------------------------------------------------------------
 // 1. GET ALL DATA (FOR LIVE VISITORS & ADMIN SYNC)
 // -----------------------------------------------------------------------------
-if ($action === 'get_all' || $_SERVER['REQUEST_METHOD'] === 'GET') {
+// -----------------------------------------------------------------------------
+// 0. ADMIN PIN VERIFICATION
+// -----------------------------------------------------------------------------
+if ($action === 'verify_pin' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $pin = $input['pin'] ?? '';
+    if ($pin === $ADMIN_PIN) {
+        $_SESSION['admin_authenticated'] = true;
+        echo json_encode(['status' => 'success', 'message' => 'Authenticated']);
+    } else {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid PIN']);
+    }
+    exit;
+}
+
+// -----------------------------------------------------------------------------
+// 0. LOGOUT
+// -----------------------------------------------------------------------------
+if ($action === 'logout') {
+    session_unset();
+    session_destroy();
+    echo json_encode(['status' => 'success', 'message' => 'Logged out']);
+    exit;
+}
+
+// -----------------------------------------------------------------------------
+// 1. GET ALL DATA (FOR LIVE VISITORS & ADMIN SYNC)
+// -----------------------------------------------------------------------------
+if ($action === 'get_all' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $db = DB::getConnection();
     // Fetch client photos
     $stmt = $db->query('SELECT * FROM client_photos');
@@ -91,9 +123,14 @@ if ($action === 'get_all' || $_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 // -----------------------------------------------------------------------------
-// 1.4 SAVE SITE THEME (ADMIN ACTION)
+// 1.4 SAVE SITE THEME (ADMIN ACTION - AUTH REQUIRED)
 // -----------------------------------------------------------------------------
 if ($action === 'save_theme' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (empty($_SESSION['admin_authenticated'])) {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+        exit;
+    }
     $input = json_decode(file_get_contents('php://input'), true);
     if (!is_array($input) && !is_string($input)) {
         http_response_code(400);
@@ -108,9 +145,14 @@ if ($action === 'save_theme' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // -----------------------------------------------------------------------------
-// 1.5 SAVE SITE LOGO & BRANDING (ADMIN ACTION)
+// 1.5 SAVE SITE LOGO & BRANDING (ADMIN ACTION - AUTH REQUIRED)
 // -----------------------------------------------------------------------------
 if ($action === 'save_logo' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (empty($_SESSION['admin_authenticated'])) {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+        exit;
+    }
     $input = json_decode(file_get_contents('php://input'), true);
     if (!is_array($input)) {
         http_response_code(400);
@@ -134,9 +176,14 @@ if ($action === 'save_logo' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // -----------------------------------------------------------------------------
-// 2. SAVE CLIENT PHOTOS (ADMIN ACTION)
+// 2. SAVE CLIENT PHOTOS (ADMIN ACTION - AUTH REQUIRED)
 // -----------------------------------------------------------------------------
 if ($action === 'save_photos' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (empty($_SESSION['admin_authenticated'])) {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+        exit;
+    }
     $input = json_decode(file_get_contents('php://input'), true);
     if (!is_array($input)) {
         http_response_code(400);
@@ -165,9 +212,14 @@ if ($action === 'save_photos' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // -----------------------------------------------------------------------------
-// 3. SAVE ECOSYSTEM BRANDS (ADMIN ACTION)
+// 3. SAVE ECOSYSTEM BRANDS (ADMIN ACTION - AUTH REQUIRED)
 // -----------------------------------------------------------------------------
 if ($action === 'save_ecosystem' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (empty($_SESSION['admin_authenticated'])) {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+        exit;
+    }
     $input = json_decode(file_get_contents('php://input'), true);
     if (!is_array($input)) {
         http_response_code(400);
@@ -237,9 +289,14 @@ if ($action === 'submit_lead' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // -----------------------------------------------------------------------------
-// 5. UPDATE LEADS LIST (STATUS / DELETE FROM ADMIN)
+// 5. UPDATE LEADS LIST (STATUS / DELETE FROM ADMIN - AUTH REQUIRED)
 // -----------------------------------------------------------------------------
 if ($action === 'save_leads' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (empty($_SESSION['admin_authenticated'])) {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+        exit;
+    }
     $input = json_decode(file_get_contents('php://input'), true);
     if (!is_array($input)) {
         http_response_code(400);
