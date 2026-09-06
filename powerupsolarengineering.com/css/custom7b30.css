@@ -655,12 +655,28 @@ blockquote .quote-author {
 .table-wrapper {
   overflow-x: auto;
 }
-/*-------- 1.2 Page Preloader (Disabled for Instant Smooth Navigation) --------*/
+/*-------- 1.2 Initial Website Opening Preloader --------*/
 #loader-wrapper {
-  display: none !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999999;
+  background: #ffffff;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease, transform 0.6s ease;
+  pointer-events: all;
 }
-#loader-wrapper.loader-off {
-  display: none !important;
+#loader-wrapper.loaded {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: scale(1.02);
 }
 #loader {
   display: flex;
@@ -672,8 +688,6 @@ blockquote .quote-author {
   height: auto;
   width: auto;
   position: relative;
-  top: auto;
-  left: auto;
 }
 .brand-preloader {
   display: flex;
@@ -685,30 +699,38 @@ blockquote .quote-author {
 }
 .preloader-solar-badge {
   position: relative;
-  width: 86px;
-  height: 86px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px rgba(244, 118, 41, 0.2);
-  margin-bottom: 18px;
+  box-shadow: 0 12px 30px rgba(244, 118, 41, 0.22), 0 0 0 4px rgba(244, 118, 41, 0.12);
+  margin-bottom: 20px;
+  padding: 6px;
+}
+.preloader-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  animation: logoPulse 2s ease-in-out infinite alternate;
 }
 .solar-pulse-ring {
   position: absolute;
-  inset: -8px;
+  inset: -10px;
   border-radius: 50%;
-  border: 2px solid rgba(244, 118, 41, 0.4);
+  border: 2.5px solid rgba(244, 118, 41, 0.45);
   animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
 }
 .solar-pulse-ring.ring-2 {
-  inset: -16px;
-  border-color: rgba(40, 167, 69, 0.25);
-  animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 0.5s;
+  inset: -20px;
+  border-color: rgba(40, 167, 69, 0.3);
+  animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 0.6s;
 }
 .preloader-sun-icon {
-  font-size: 42px;
+  font-size: 44px;
   color: #f47629;
   animation: sunSpin 12s linear infinite;
   display: flex;
@@ -728,17 +750,17 @@ blockquote .quote-author {
 }
 .preloader-tagline {
   font-family: 'Roboto', 'Inter', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 2.5px;
   color: #16a34a;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   animation: taglineShimmer 2s ease-in-out infinite alternate;
 }
 .brand-preloader .preloader-line {
-  width: 180px;
-  height: 4px;
+  width: 200px;
+  height: 4.5px;
   background: #f1f5f9;
   border-radius: 6px;
   overflow: hidden;
@@ -756,6 +778,10 @@ blockquote .quote-author {
   box-shadow: 0 0 10px rgba(244, 118, 41, 0.6);
   animation: preloaderLineMove 1.4s infinite ease-in-out;
 }
+@keyframes logoPulse {
+  0% { transform: scale(0.96); filter: drop-shadow(0 0 4px rgba(244, 118, 41, 0.3)); }
+  100% { transform: scale(1.04); filter: drop-shadow(0 0 12px rgba(244, 118, 41, 0.7)); }
+}
 @keyframes sunSpin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -765,8 +791,8 @@ blockquote .quote-author {
   100% { transform: scale(1.35); opacity: 0; }
 }
 @keyframes taglineShimmer {
-  0% { opacity: 0.7; }
-  100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(40, 167, 69, 0.3)); }
+  0% { opacity: 0.75; }
+  100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(40, 167, 69, 0.4)); }
 }
 @keyframes preloaderLineMove {
   0% { left: -50%; }
