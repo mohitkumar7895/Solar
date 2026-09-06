@@ -379,6 +379,31 @@
 			object-fit: cover;
 		}
 
+		/* Branding Studio */
+		.branding-mode-card {
+			display: block;
+			background: #ffffff;
+			border: 2px solid #e2e8f0;
+			border-radius: 10px;
+			padding: 14px;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+		.branding-mode-card:hover {
+			border-color: #cbd5e1;
+			background: #f8fafc;
+		}
+		.branding-mode-card.active {
+			border-color: var(--adm-primary);
+			background: #fff7ed;
+			box-shadow: 0 0 0 1px var(--adm-primary);
+		}
+		.adm-range {
+			width: 100%;
+			accent-color: var(--adm-primary);
+			cursor: pointer;
+		}
+
 		/* Auth Modal */
 		.auth-modal {
 			position: fixed;
@@ -450,6 +475,9 @@
 				</button>
 				<button class="adm-tab-btn" onclick="switchTab('photosTab', this)">
 					<i class="fa fa-camera"></i> Client Installation Photos
+				</button>
+				<button class="adm-tab-btn" onclick="switchTab('brandingTab', this)">
+					<i class="fa fa-picture-o"></i> Site Logo &amp; Branding
 				</button>
 				<button class="adm-tab-btn" onclick="switchTab('settingsTab', this)">
 					<i class="fa fa-cog"></i> Settings &amp; Backup
@@ -709,7 +737,142 @@
 
 
 		<!-- ========================================================================= -->
-		<!-- TAB 4: SETTINGS & BACKUP -->
+		<!-- TAB 4: SITE LOGO & BRANDING STUDIO -->
+		<!-- ========================================================================= -->
+		<div id="brandingTab" class="tab-content-panel" style="display: none;">
+			<div class="adm-card" style="margin-bottom: 25px;">
+				<div class="adm-card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+					<div>
+						<h3 class="adm-card-title"><i class="fa fa-picture-o" style="color: var(--adm-primary);"></i> Site Logo &amp; Branding Studio</h3>
+						<p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">
+							Configure your website's main logo and tagline. Choose between crisp vector typography or direct custom logo image upload.
+						</p>
+					</div>
+					<div style="display: flex; gap: 8px;">
+						<a href="index.html" target="_blank" class="btn-adm-outline"><i class="fa fa-eye"></i> View Live Site</a>
+						<button class="btn-adm-outline" onclick="handleResetLogoSettings()"><i class="fa fa-refresh"></i> Reset Default Logo</button>
+					</div>
+				</div>
+
+				<div class="row">
+					<!-- Left Column: Controls & Uploader -->
+					<div class="col-md-6">
+						<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; margin-bottom: 20px;">
+							<label class="adm-label" style="margin-bottom: 12px; font-size: 14px;">Select Logo Display Mode</label>
+							
+							<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+								<label id="modeCardDefault" class="branding-mode-card active" onclick="setLogoMode('default')">
+									<input type="radio" name="logoModeRadio" value="default" checked style="display: none;">
+									<div style="font-weight: 700; color: #0f172a; margin-bottom: 4px;">
+										<i class="fa fa-bolt" style="color: #f47629; margin-right: 4px;"></i> Default Typography
+									</div>
+									<div style="font-size: 12px; color: #64748b; line-height: 1.4;">
+										Bolt icon + Bold Name + 100% Crisp Visible Tagline (Recommended)
+									</div>
+								</label>
+
+								<label id="modeCardImage" class="branding-mode-card" onclick="setLogoMode('image')">
+									<input type="radio" name="logoModeRadio" value="image" style="display: none;">
+									<div style="font-weight: 700; color: #0f172a; margin-bottom: 4px;">
+										<i class="fa fa-file-image-o" style="color: #3b82f6; margin-right: 4px;"></i> Upload Custom Image
+									</div>
+									<div style="font-size: 12px; color: #64748b; line-height: 1.4;">
+										Upload direct PNG/JPG/WebP logo image file
+									</div>
+								</label>
+							</div>
+
+							<!-- Settings for Default Typography Mode -->
+							<div id="defaultModeSettings">
+								<div class="row">
+									<div class="col-xs-6">
+										<div class="form-group" style="margin-bottom: 12px;">
+											<label class="adm-label">Brand Name</label>
+											<input type="text" id="logoNameInput" class="adm-input" value="Liana" placeholder="e.g. Liana" oninput="updateLogoLivePreview()">
+										</div>
+									</div>
+									<div class="col-xs-6">
+										<div class="form-group" style="margin-bottom: 12px;">
+											<label class="adm-label">Subtitle</label>
+											<input type="text" id="logoSubInput" class="adm-input" value="Solar" placeholder="e.g. Solar" oninput="updateLogoLivePreview()">
+										</div>
+									</div>
+								</div>
+								<div class="form-group" style="margin-bottom: 14px;">
+									<label class="adm-label">Tagline Text</label>
+									<input type="text" id="logoTaglineInput" class="adm-input" value="POWERING A BRIGHTER TOMORROW" placeholder="e.g. POWERING A BRIGHTER TOMORROW" oninput="updateLogoLivePreview()">
+									<small style="color: #64748b; font-size: 11px;">Rendered in bold high-contrast green (#16a34a) below brand name.</small>
+								</div>
+							</div>
+
+							<!-- Settings for Custom Image Mode -->
+							<div id="imageModeSettings" style="display: none;">
+								<div class="form-group" style="margin-bottom: 14px;">
+									<label class="adm-label">Upload Custom Logo File</label>
+									<div class="dropzone-box" id="logoDropzone" onclick="document.getElementById('logoFileInput').click()" style="padding: 22px 15px;">
+										<div class="dropzone-icon" style="font-size: 34px;"><i class="fa fa-cloud-upload"></i></div>
+										<div style="font-weight: 700; color: #0f172a; font-size: 14px; margin-bottom: 4px;">Click or Drag &amp; Drop Logo Image</div>
+										<div style="font-size: 12px; color: #64748b;">Supports PNG (transparent), JPG, WebP or SVG</div>
+										<input type="file" id="logoFileInput" accept="image/*" style="display: none;" onchange="handleLogoFileInput(event)">
+									</div>
+								</div>
+
+								<div class="form-group" style="margin-bottom: 14px;">
+									<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+										<label class="adm-label" style="margin: 0;">Logo Display Height</label>
+										<span id="logoHeightVal" style="font-weight: 700; color: var(--adm-primary); font-size: 13px;">95px</span>
+									</div>
+									<input type="range" id="logoHeightSlider" min="40" max="150" value="95" class="adm-range" oninput="handleLogoHeightSlider(this.value)">
+								</div>
+							</div>
+
+							<!-- Save Button -->
+							<div style="margin-top: 18px; display: flex; gap: 10px; align-items: center;">
+								<button class="btn-adm" onclick="handleSaveLogoSettings()"><i class="fa fa-save"></i> Save Logo &amp; Branding</button>
+								<span id="logoSaveToast" style="display: none; color: #16a34a; font-weight: 700; font-size: 13px;">
+									<i class="fa fa-check-circle"></i> Saved &amp; Updated Live!
+								</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Right Column: Live Previews -->
+					<div class="col-md-6">
+						<label class="adm-label" style="margin-bottom: 10px; font-size: 14px;">Live Realtime Visual Previews</label>
+
+						<!-- Light Preview (Header Navbar) -->
+						<div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+							<div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 12px;">
+								<i class="fa fa-sun-o" style="color: #f59e0b;"></i> Light Navbar Preview (Top Navigation Header)
+							</div>
+							<div id="previewNavbarLogo" style="min-height: 80px; display: flex; align-items: center; justify-content: flex-start; padding: 10px 14px; background: #ffffff; border: 1px dashed #e2e8f0; border-radius: 8px;">
+								<!-- Rendered dynamically -->
+							</div>
+						</div>
+
+						<!-- Dark Preview (Footer) -->
+						<div style="background: #0b1329; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+							<div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 12px;">
+								<i class="fa fa-moon-o" style="color: #60a5fa;"></i> Dark Footer Preview (Bottom Page Footer)
+							</div>
+							<div id="previewFooterLogo" style="min-height: 80px; display: flex; align-items: center; justify-content: flex-start; padding: 10px 14px; background: #0b1329; border: 1px dashed rgba(255,255,255,0.15); border-radius: 8px;">
+								<!-- Rendered dynamically -->
+							</div>
+						</div>
+
+						<!-- Helper tip box -->
+						<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 15px; font-size: 12px; color: #1e40af; line-height: 1.5;">
+							<i class="fa fa-info-circle" style="font-size: 14px; margin-right: 4px;"></i>
+							<strong>Pro Tip:</strong> Using the <em>Default Typography</em> mode guarantees 100% crystal-clear tagline readability on all devices (mobiles, tablets, 4K screens) without blurriness!
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- ========================================================================= -->
+		<!-- TAB 5: SETTINGS & BACKUP -->
 		<!-- ========================================================================= -->
 		<div id="settingsTab" class="tab-content-panel" style="display: none;">
 			
@@ -806,6 +969,7 @@
 			if (tabId === 'leadsTab') renderLeads();
 			if (tabId === 'ecosystemTab') renderEcosystemAdmin();
 			if (tabId === 'photosTab') renderPhotosAdmin();
+			if (tabId === 'brandingTab') initBrandingTab();
 		}
 
 		// Init Dashboard
@@ -813,6 +977,7 @@
 			renderLeads();
 			renderEcosystemAdmin();
 			renderPhotosAdmin();
+			initBrandingTab();
 			setupPhotoDragAndDrop();
 		}
 
@@ -1315,7 +1480,232 @@
 
 
 		// =========================================================================
-		// TAB 4 LOGIC: SETTINGS & BACKUP
+		// TAB 4: SITE LOGO & BRANDING STUDIO LOGIC
+		// =========================================================================
+		let currentBrandingConfig = null;
+		let stagedLogoImageBase64 = null;
+
+		function initBrandingTab() {
+			currentBrandingConfig = getSiteLogo();
+			stagedLogoImageBase64 = currentBrandingConfig.imageUrl || "";
+
+			// Populate inputs
+			const nameInput = document.getElementById("logoNameInput");
+			const subInput = document.getElementById("logoSubInput");
+			const tagInput = document.getElementById("logoTaglineInput");
+			const heightSlider = document.getElementById("logoHeightSlider");
+			const heightVal = document.getElementById("logoHeightVal");
+
+			if (nameInput) nameInput.value = currentBrandingConfig.name || "Liana";
+			if (subInput) subInput.value = currentBrandingConfig.sub || "Solar";
+			if (tagInput) tagInput.value = currentBrandingConfig.tagline || "POWERING A BRIGHTER TOMORROW";
+			
+			const height = currentBrandingConfig.height || 95;
+			if (heightSlider) heightSlider.value = height;
+			if (heightVal) heightVal.innerText = height + "px";
+
+			setLogoMode(currentBrandingConfig.mode || 'default', false);
+			setupLogoDragAndDrop();
+			updateLogoLivePreview();
+		}
+
+		function setLogoMode(mode, triggerUpdate = true) {
+			if (!currentBrandingConfig) currentBrandingConfig = getSiteLogo();
+			currentBrandingConfig.mode = mode;
+
+			const defaultCard = document.getElementById("modeCardDefault");
+			const imageCard = document.getElementById("modeCardImage");
+			const defaultSettings = document.getElementById("defaultModeSettings");
+			const imageSettings = document.getElementById("imageModeSettings");
+
+			if (mode === 'default') {
+				if (defaultCard) defaultCard.classList.add("active");
+				if (imageCard) imageCard.classList.remove("active");
+				if (defaultSettings) defaultSettings.style.display = "block";
+				if (imageSettings) imageSettings.style.display = "none";
+			} else {
+				if (imageCard) imageCard.classList.add("active");
+				if (defaultCard) defaultCard.classList.remove("active");
+				if (defaultSettings) defaultSettings.style.display = "none";
+				if (imageSettings) imageSettings.style.display = "block";
+			}
+
+			if (triggerUpdate) {
+				updateLogoLivePreview();
+			}
+		}
+
+		function handleLogoHeightSlider(val) {
+			const heightVal = document.getElementById("logoHeightVal");
+			if (heightVal) heightVal.innerText = val + "px";
+			if (currentBrandingConfig) {
+				currentBrandingConfig.height = parseInt(val, 10);
+			}
+			updateLogoLivePreview();
+		}
+
+		function handleLogoFileInput(e) {
+			const file = e.target.files[0];
+			if (!file) return;
+			const reader = new FileReader();
+			reader.onload = (event) => {
+				stagedLogoImageBase64 = event.target.result;
+				if (currentBrandingConfig) {
+					currentBrandingConfig.imageUrl = stagedLogoImageBase64;
+				}
+				setLogoMode('image');
+			};
+			reader.readAsDataURL(file);
+		}
+
+		function setupLogoDragAndDrop() {
+			const dropzone = document.getElementById("logoDropzone");
+			if (!dropzone || dropzone.dataset.bound) return;
+			dropzone.dataset.bound = "true";
+
+			['dragenter', 'dragover'].forEach(eventName => {
+				dropzone.addEventListener(eventName, (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					dropzone.classList.add("dragover");
+				}, false);
+			});
+
+			['dragleave', 'drop'].forEach(eventName => {
+				dropzone.addEventListener(eventName, (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					dropzone.classList.remove("dragover");
+				}, false);
+			});
+
+			dropzone.addEventListener('drop', (e) => {
+				const dt = e.dataTransfer;
+				const files = dt.files;
+				if (files && files.length > 0) {
+					const file = files[0];
+					const reader = new FileReader();
+					reader.onload = (event) => {
+						stagedLogoImageBase64 = event.target.result;
+						if (currentBrandingConfig) {
+							currentBrandingConfig.imageUrl = stagedLogoImageBase64;
+						}
+						setLogoMode('image');
+					};
+					reader.readAsDataURL(file);
+				}
+			}, false);
+		}
+
+		function updateLogoLivePreview() {
+			const mode = currentBrandingConfig ? currentBrandingConfig.mode : 'default';
+			const name = (document.getElementById("logoNameInput") && document.getElementById("logoNameInput").value) || "Liana";
+			const sub = (document.getElementById("logoSubInput") && document.getElementById("logoSubInput").value) || "Solar";
+			const tagline = (document.getElementById("logoTaglineInput") && document.getElementById("logoTaglineInput").value) || "POWERING A BRIGHTER TOMORROW";
+			const height = currentBrandingConfig && currentBrandingConfig.height ? currentBrandingConfig.height : 95;
+			const imgUrl = stagedLogoImageBase64 || (currentBrandingConfig && currentBrandingConfig.imageUrl) || "images/logo.jpeg";
+
+			const navPreview = document.getElementById("previewNavbarLogo");
+			const footerPreview = document.getElementById("previewFooterLogo");
+
+			if (!navPreview || !footerPreview) return;
+
+			if (mode === 'image' && imgUrl) {
+				navPreview.innerHTML = `
+					<div class="logo">
+						<a href="javascript:void(0)" class="logo-link-brand" style="display: inline-flex; align-items: center;">
+							<img src="${imgUrl}" class="site-main-logo" style="height: ${height}px; max-width: 320px; object-fit: contain; mix-blend-mode: multiply;" alt="Liana Solar">
+						</a>
+					</div>
+				`;
+				footerPreview.innerHTML = `
+					<div class="logo">
+						<a href="javascript:void(0)" class="logo-link-brand" style="display: inline-flex; align-items: center;">
+							<img src="${imgUrl}" class="site-main-logo site-main-logo--footer" style="height: ${Math.round(height * 0.85)}px; max-width: 320px; object-fit: contain; background: #ffffff; padding: 6px 12px; border-radius: 6px;" alt="Liana Solar">
+						</a>
+					</div>
+				`;
+			} else {
+				navPreview.innerHTML = `
+					<div class="logo">
+						<a href="javascript:void(0)" class="logo-link-brand" style="display: inline-flex; align-items: center; text-decoration: none;">
+							<img src="images/bolt.gif" class="logo-bolt" alt="Liana Solar" style="height: 52px; width: auto; margin-right: 10px;">
+							<span class="logo-words" style="display: flex; flex-direction: column; justify-content: center; line-height: 1.1;">
+								<span class="logo-brand-row" style="display: flex; align-items: baseline; gap: 4px;">
+									<strong class="logo-name" style="font-size: 26px; font-weight: 900; color: #1e3a8a; letter-spacing: -0.5px; text-transform: uppercase;">${name}</strong>
+									<span class="logo-sub" style="font-size: 26px; font-weight: 800; color: #16a34a; letter-spacing: -0.5px; text-transform: uppercase;">${sub}</span>
+								</span>
+								<span class="logo-tagline" style="font-size: 8.5px; font-weight: 800; letter-spacing: 2px; color: #16a34a; text-transform: uppercase; margin-top: 2px;">— ${tagline} —</span>
+							</span>
+						</a>
+					</div>
+				`;
+				footerPreview.innerHTML = `
+					<div class="logo">
+						<a href="javascript:void(0)" class="logo-link-brand" style="display: inline-flex; align-items: center; text-decoration: none;">
+							<img src="images/bolt.gif" class="logo-bolt" alt="Liana Solar" style="height: 52px; width: auto; margin-right: 10px;">
+							<span class="logo-words logo-words--invert" style="display: flex; flex-direction: column; justify-content: center; line-height: 1.1;">
+								<span class="logo-brand-row" style="display: flex; align-items: baseline; gap: 4px;">
+									<strong class="logo-name" style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; text-transform: uppercase;">${name}</strong>
+									<span class="logo-sub" style="font-size: 26px; font-weight: 800; color: #22c55e; letter-spacing: -0.5px; text-transform: uppercase;">${sub}</span>
+								</span>
+								<span class="logo-tagline" style="font-size: 8.5px; font-weight: 800; letter-spacing: 2px; color: #4ade80; text-transform: uppercase; margin-top: 2px;">— ${tagline} —</span>
+							</span>
+						</a>
+					</div>
+				`;
+			}
+		}
+
+		function handleSaveLogoSettings() {
+			const mode = currentBrandingConfig ? currentBrandingConfig.mode : 'default';
+			const name = (document.getElementById("logoNameInput") && document.getElementById("logoNameInput").value.trim()) || "Liana";
+			const sub = (document.getElementById("logoSubInput") && document.getElementById("logoSubInput").value.trim()) || "Solar";
+			const tagline = (document.getElementById("logoTaglineInput") && document.getElementById("logoTaglineInput").value.trim()) || "POWERING A BRIGHTER TOMORROW";
+			const height = parseInt(document.getElementById("logoHeightSlider").value, 10) || 95;
+			const imageUrl = stagedLogoImageBase64 || (currentBrandingConfig ? currentBrandingConfig.imageUrl : "images/logo.jpeg");
+
+			const updatedConfig = {
+				mode,
+				name,
+				sub,
+				tagline,
+				height,
+				imageUrl
+			};
+
+			saveSiteLogo(updatedConfig);
+			currentBrandingConfig = updatedConfig;
+			updateLogoLivePreview();
+
+			const toast = document.getElementById("logoSaveToast");
+			if (toast) {
+				toast.innerHTML = `<i class="fa fa-check-circle"></i> Saved &amp; Updated Live!`;
+				toast.style.display = "inline-flex";
+				setTimeout(() => {
+					toast.style.display = "none";
+				}, 4000);
+			}
+		}
+
+		function handleResetLogoSettings() {
+			if (confirm("Reset website logo and branding to default typography format?")) {
+				resetSiteLogo();
+				initBrandingTab();
+				const toast = document.getElementById("logoSaveToast");
+				if (toast) {
+					toast.innerHTML = `<i class="fa fa-check-circle"></i> Reset to default successfully!`;
+					toast.style.display = "inline-flex";
+					setTimeout(() => {
+						toast.style.display = "none";
+					}, 4000);
+				}
+			}
+		}
+
+
+		// =========================================================================
+		// TAB 5 LOGIC: SETTINGS & BACKUP
 		// =========================================================================
 		function handleChangePin(e) {
 			e.preventDefault();

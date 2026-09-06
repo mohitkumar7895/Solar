@@ -11,6 +11,78 @@
 const API_ENDPOINT = "data-api.php";
 
 // =========================================================================
+// 0. SITE BRANDING & LOGO MANAGEMENT
+// =========================================================================
+const LOGO_STORAGE_KEY = "liana_solar_site_branding_v1";
+
+const DEFAULT_SITE_LOGO = {
+    mode: "default", // "default" (pure crisp HTML & tagline) or "image" (custom uploaded logo)
+    imageUrl: "images/logo.jpeg",
+    name: "Liana",
+    sub: "Solar",
+    tagline: "POWERING A BRIGHTER TOMORROW",
+    height: 95
+};
+
+function getSiteLogo() {
+    try {
+        const stored = localStorage.getItem(LOGO_STORAGE_KEY);
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && typeof parsed === "object") return parsed;
+        }
+    } catch (e) {
+        console.error("Error reading site logo:", e);
+    }
+    return DEFAULT_SITE_LOGO;
+}
+
+function saveSiteLogo(logoData) {
+    localStorage.setItem(LOGO_STORAGE_KEY, JSON.stringify(logoData));
+    applySiteLogo();
+    // Optional server sync
+    fetch(`${API_ENDPOINT}?action=save_logo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(logoData)
+    }).catch(err => console.log("Server API logo sync:", err));
+}
+
+function resetSiteLogo() {
+    saveSiteLogo(DEFAULT_SITE_LOGO);
+    return DEFAULT_SITE_LOGO;
+}
+
+function applySiteLogo() {
+    const config = getSiteLogo();
+    const logoContainers = document.querySelectorAll(".page-header .logo > a, .page-footer .logo > a");
+    
+    logoContainers.forEach(container => {
+        const isFooter = container.closest(".page-footer") !== null;
+        if (config.mode === "image" && config.imageUrl) {
+            container.innerHTML = `
+                <img src="${config.imageUrl}" 
+                     class="site-main-logo ${isFooter ? 'site-main-logo--footer' : ''}" 
+                     alt="Liana Solar" 
+                     style="height: ${config.height || (isFooter ? 75 : 95)}px; max-width: 360px; object-fit: contain; mix-blend-mode: multiply;">
+            `;
+        } else {
+            // Default crisp typography with high-contrast visible tagline
+            container.innerHTML = `
+                <img src="images/bolt.gif" class="logo-bolt" alt="Liana Solar">
+                <span class="logo-words ${isFooter ? 'logo-words--invert' : ''}">
+                    <span class="logo-brand-row">
+                        <strong class="logo-name">${config.name || 'Liana'}</strong>
+                        <span class="logo-sub">${config.sub || 'Solar'}</span>
+                    </span>
+                    <span class="logo-tagline">— ${config.tagline || 'POWERING A BRIGHTER TOMORROW'} —</span>
+                </span>
+            `;
+        }
+    });
+}
+
+// =========================================================================
 // 1. CLIENT PHOTOS MANAGEMENT
 // =========================================================================
 const DEFAULT_CLIENT_PHOTOS = [
@@ -90,20 +162,21 @@ function resetClientPhotos() {
 // 2. TECHNOLOGY & EQUIPMENT ECOSYSTEM MANAGEMENT
 // =========================================================================
 const DEFAULT_ECOSYSTEM_BRANDS = [
-    { id: "eco-1", name: "DEYE", sub: "INVERTERS & STORAGE", icon: "fa fa-circle", color: "#0984e3", logo: "" },
-    { id: "eco-2", name: "SOLIS", sub: "SOLAR INVERTERS", icon: "fa fa-sun-o", color: "#e67e22", logo: "" },
-    { id: "eco-3", name: "INA SOLAR", sub: "TOGETHER WE SHINE", icon: "fa fa-shield", color: "#00a8ff", logo: "" },
-    { id: "eco-4", name: "LIVGUARD", sub: "ENERGY UNLIMITED", icon: "fa fa-bolt", color: "#d63031", logo: "" },
-    { id: "eco-5", name: "LUMINOUS", sub: "SOLAR SOLUTIONS", icon: "fa fa-microchip", color: "#1e3799", logo: "" },
-    { id: "eco-6", name: "TATA POWER SOLAR", sub: "TIER-1 MODULES", icon: "fa fa-flash", color: "#0c2461", logo: "" },
-    { id: "eco-7", name: "WAAREE", sub: "ONE WITH THE SUN", icon: "fa fa-sun-o", color: "#27ae60", logo: "" },
-    { id: "eco-8", name: "GROWATT", sub: "SMART ENERGY", icon: "fa fa-leaf", color: "#20bf6b", logo: "" },
-    { id: "eco-9", name: "HAVELLS", sub: "SOLAR & SWITCHGEAR", icon: "fa fa-cog", color: "#eb2f06", logo: "" },
-    { id: "eco-10", name: "POLYCAB", sub: "SOLAR WIRES & CABLES", icon: "fa fa-plug", color: "#d35400", logo: "" },
-    { id: "eco-11", name: "SCHNEIDER", sub: "SURGE & PROTECTION", icon: "fa fa-check-circle", color: "#10ac84", logo: "" }
+    { id: "eco-1", name: "DEYE", sub: "INVERTERS & STORAGE", logo: "images/brands/deye.svg" },
+    { id: "eco-2", name: "SOLIS", sub: "SOLAR INVERTERS", logo: "images/brands/solis.svg" },
+    { id: "eco-3", name: "INA SOLAR", sub: "TOGETHER WE SHINE", logo: "images/brands/ina-solar.svg" },
+    { id: "eco-4", name: "LIVGUARD", sub: "ENERGY UNLIMITED", logo: "images/brands/livguard.svg" },
+    { id: "eco-5", name: "LUMINOUS", sub: "SOLAR SOLUTIONS", logo: "images/brands/luminous.svg" },
+    { id: "eco-6", name: "TATA POWER SOLAR", sub: "TIER-1 MODULES", logo: "images/brands/tata-solar.svg" },
+    { id: "eco-7", name: "WAAREE", sub: "ONE WITH THE SUN", logo: "images/brands/waaree.svg" },
+    { id: "eco-8", name: "GROWATT", sub: "SMART ENERGY", logo: "images/brands/growatt.svg" },
+    { id: "eco-9", name: "HAVELLS", sub: "SOLAR & SWITCHGEAR", logo: "images/brands/havells.svg" },
+    { id: "eco-10", name: "POLYCAB", sub: "SOLAR WIRES & CABLES", logo: "images/brands/polycab.svg" },
+    { id: "eco-11", name: "SCHNEIDER", sub: "SURGE & PROTECTION", logo: "images/brands/schneider.svg" },
+    { id: "eco-12", name: "ADANI SOLAR", sub: "TIER-1 MODULES", logo: "images/brands/adani-solar.svg" }
 ];
 
-const ECOSYSTEM_STORAGE_KEY = "liana_solar_ecosystem_brands_v1";
+const ECOSYSTEM_STORAGE_KEY = "liana_solar_ecosystem_brands_v2";
 
 function getEcosystemBrands() {
     try {
@@ -173,18 +246,17 @@ function renderWebsiteEcosystem(targetElementId = "ecosystemTrack") {
     const generateSetHtml = (set) => set.map(b => {
         let visualHtml = "";
         if (b.logo) {
-            visualHtml = `<img src="${b.logo}" class="eco-brand-img" alt="${b.name}" style="max-height: 28px; max-width: 120px; object-fit: contain; margin-right: 6px;">`;
+            visualHtml = `<img src="${b.logo}" class="eco-brand-img" alt="${b.name}">`;
         } else if (b.icon) {
-            visualHtml = `<i class="${b.icon}" style="color: ${b.color || '#f47629'}; margin-right: 6px;"></i>`;
+            visualHtml = `<i class="${b.icon}" style="color: ${b.color || '#f47629'}; margin-right: 6px;"></i><span>${b.name}</span>`;
         } else {
-            visualHtml = `<span class="eco-dot" style="background: ${b.color || '#f47629'}; margin-right: 6px;"></span>`;
+            visualHtml = `<span class="eco-dot" style="background: ${b.color || '#f47629'}; margin-right: 6px;"></span><span>${b.name}</span>`;
         }
 
         return `
             <div class="ecosystem-card">
-                <div class="eco-brand" style="color: ${b.color || '#0f172a'};">
+                <div class="eco-brand-logo-wrap">
                     ${visualHtml}
-                    <span>${b.name}</span>
                 </div>
                 <div class="eco-sub">${b.sub}</div>
             </div>
@@ -335,6 +407,7 @@ function exportAllSiteDataJson() {
             exportedAt: new Date().toISOString(),
             version: "2.0"
         },
+        siteLogo: getSiteLogo(),
         contactSubmissions: getContactSubmissions(),
         ecosystemBrands: getEcosystemBrands(),
         clientPhotos: getClientPhotos()
@@ -345,6 +418,9 @@ function exportAllSiteDataJson() {
 function importSiteDataJson(jsonData) {
     if (!jsonData || typeof jsonData !== 'object') {
         throw new Error("Invalid backup data format");
+    }
+    if (jsonData.siteLogo && typeof jsonData.siteLogo === 'object') {
+        saveSiteLogo(jsonData.siteLogo);
     }
     if (Array.isArray(jsonData.contactSubmissions)) {
         saveContactSubmissions(jsonData.contactSubmissions);
@@ -366,9 +442,13 @@ function syncWithServer() {
         .then(res => res.json())
         .then(res => {
             if (res && res.status === 'success' && res.data) {
-                const { clientPhotos, ecosystemBrands, contactSubmissions } = res.data;
+                const { clientPhotos, ecosystemBrands, contactSubmissions, siteLogo } = res.data;
                 let hasChanges = false;
                 
+                if (siteLogo && typeof siteLogo === 'object') {
+                    localStorage.setItem(LOGO_STORAGE_KEY, JSON.stringify(siteLogo));
+                    applySiteLogo();
+                }
                 if (Array.isArray(clientPhotos) && clientPhotos.length > 0) {
                     localStorage.setItem(PHOTOS_STORAGE_KEY, JSON.stringify(clientPhotos));
                     hasChanges = true;
@@ -395,6 +475,7 @@ function syncWithServer() {
 
 // Initial trigger on load
 window.addEventListener("DOMContentLoaded", () => {
+    applySiteLogo();
     if (document.getElementById("ecosystemTrack")) {
         renderWebsiteEcosystem("ecosystemTrack");
     }

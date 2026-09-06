@@ -444,95 +444,122 @@ blockquote .quote-author {
 .table-wrapper {
   overflow-x: auto;
 }
-/*-------- 1.2 Page Preloader    --------*/
+/*-------- 1.2 Page Preloader (Disabled for Instant Smooth Navigation) --------*/
 #loader-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10000000;
-  background-color: #fff;
+  display: none !important;
 }
 #loader-wrapper.loader-off {
   display: none !important;
 }
 #loader {
-  display: block;
-  margin: -50px 0 0 -150px;
-  height: 100px;
-  width: 300px;
-  position: relative;
-  top: 50%;
-  left: 50%;
-}
-.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 25px;
-  line-height: 100px;
-  margin: 0 auto;
+  margin: 0;
+  height: auto;
+  width: auto;
+  position: relative;
+  top: auto;
+  left: auto;
 }
-.loader .bolt {
-  width: 0px;
-  height: 0px;
-  border: 15px solid transparent;
-  border-bottom: 55px solid #f47629;
+.brand-preloader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+}
+.preloader-solar-badge {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(244, 118, 41, 0.2);
+  margin-bottom: 18px;
+}
+.solar-pulse-ring {
   position: absolute;
-  margin-top: -100px;
-  margin-left: 43%;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(244, 118, 41, 0.4);
+  animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
 }
-.loader .one {
-  margin-left: 0;
-  transform: rotateZ(-25deg) translateY(7px);
-  animation: white 0.5s linear infinite;
+.solar-pulse-ring.ring-2 {
+  inset: -16px;
+  border-color: rgba(40, 167, 69, 0.25);
+  animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 0.5s;
 }
-.loader .one .other {
-  animation: whitet 0.5s linear infinite;
+.preloader-sun-icon {
+  font-size: 42px;
+  color: #f47629;
+  animation: sunSpin 12s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.loader .two {
-  border-bottom: 55px solid #FEFEFE;
-  transform: translateY(-7px);
-  animation: orange 0.7s linear infinite;
+.preloader-brand-title {
+  font-family: 'Roboto', 'Inter', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: #1e3a8a;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
 }
-.loader .two .other {
-  border-top: 55px solid #FEFEFE;
-  animation: oranget 0.7s linear infinite;
+.preloader-brand-title span {
+  color: #16a34a;
 }
-.loader .three {
-  margin-left: 84%;
-  transform: rotateZ(25deg) translateY(0px);
-  animation: white 0.5s linear infinite;
+.preloader-tagline {
+  font-family: 'Roboto', 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: #16a34a;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  animation: taglineShimmer 2s ease-in-out infinite alternate;
 }
-.loader .three .other {
-  animation: whitet 0.5s linear infinite;
+.brand-preloader .preloader-line {
+  width: 180px;
+  height: 4px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
 }
-.loader .other {
-  width: 0px;
-  height: 0px;
-  border: 11px solid transparent;
-  border-top: 55px solid #f47629;
-  margin-top: 40px;
+.brand-preloader .preloader-line span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, #f47629 0%, #28a745 50%, #0077b6 100%);
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(244, 118, 41, 0.6);
+  animation: preloaderLineMove 1.4s infinite ease-in-out;
 }
-@keyframes white {
-  to {
-    border-bottom-color: #FEFEFE;
-  }
+@keyframes sunSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
-@keyframes whitet {
-  to {
-    border-top-color: #FEFEFE;
-  }
+@keyframes pulseRing {
+  0% { transform: scale(0.85); opacity: 1; }
+  100% { transform: scale(1.35); opacity: 0; }
 }
-@keyframes orange {
-  to {
-    border-bottom-color: #f47629;
-  }
+@keyframes taglineShimmer {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(40, 167, 69, 0.3)); }
 }
-@keyframes oranget {
-  to {
-    border-top-color: #f47629;
-  }
+@keyframes preloaderLineMove {
+  0% { left: -50%; }
+  100% { left: 100%; }
 }
 /*-------- 1.3 Forms             --------*/
 .input-custom {
@@ -1044,48 +1071,117 @@ header.page-header {
   font-weight: normal;
 }
 header .header-top {
-  padding: 20px 0 25px;
+  padding: 12px 0 16px;
+}
+@media (min-width: 768px) {
+  header .header-top .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header .phone {
+    padding: 0 !important;
+    float: none !important;
+    text-align: right;
+  }
+  header .social-links {
+    padding: 0 !important;
+  }
 }
 header .logo {
   position: relative;
-}
-header .logo > a {
   display: flex;
   align-items: center;
-  gap: 12px;
-  max-width: 420px;
+  justify-content: center;
+}
+header .logo > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 480px;
   margin: 0 auto;
   text-decoration: none;
 }
+header .logo .site-main-logo {
+  height: 95px;
+  width: auto;
+  max-width: 360px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: contrast(1.06) saturate(1.04);
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+}
+header .logo .site-main-logo:hover {
+  transform: scale(1.04);
+}
 header .logo .logo-bolt {
-  height: 78px;
+  height: 64px;
   width: auto;
   flex-shrink: 0;
 }
 .logo-words {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   line-height: 1.05;
 }
+.logo-brand-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
 .logo-name {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 700;
-  font-size: 48px;
-  color: #252936;
+  font-family: 'Roboto', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 38px;
+  color: #1e3a8a;
   letter-spacing: -0.5px;
+  line-height: 1;
 }
 .logo-sub {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  color: #252936;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-top: 2px;
+  font-family: 'Roboto', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  color: #16a34a;
+  letter-spacing: 0.5px;
+  line-height: 1;
 }
-.logo-words--invert .logo-name,
+.logo-tagline {
+  font-family: 'Roboto', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 10px;
+  color: #16a34a;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  display: block;
+}
+.logo-words--invert .logo-name {
+  color: #ffffff;
+}
 .logo-words--invert .logo-sub {
-  color: #fff;
+  color: #4ade80;
+}
+.logo-words--invert .logo-tagline {
+  color: #86efac;
+}
+.page-footer .logo .site-main-logo--footer {
+  height: 75px;
+  width: auto;
+  max-width: 270px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 6px 14px;
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform 0.25s ease;
+}
+.page-footer .logo .site-main-logo--footer:hover {
+  transform: scale(1.04);
 }
 header .phone {
   padding: 20px 0 0 0;
@@ -1332,6 +1428,10 @@ body:not(.home) header.page-header {
     width: 100%;
   }
   header.page-header .logo > a {
+    max-width: 280px;
+  }
+  header.page-header .logo .site-main-logo {
+    height: 80px;
     max-width: 280px;
   }
   header.page-header .logo .logo-bolt {
@@ -4649,13 +4749,17 @@ Skin Name: Nivo Slider Default Theme
 
 .ecosystem-card {
   flex: 0 0 auto;
-  min-width: 220px;
-  padding: 14px 22px;
+  min-width: 210px;
+  padding: 12px 20px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
 }
@@ -4666,8 +4770,30 @@ Skin Name: Nivo Slider Default Theme
   box-shadow: 0 8px 20px rgba(244, 118, 41, 0.15);
 }
 
+.ecosystem-card .eco-brand-logo-wrap {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.ecosystem-card .eco-brand-img {
+  max-height: 34px;
+  max-width: 145px;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.ecosystem-card:hover .eco-brand-img {
+  transform: scale(1.06);
+}
+
 .ecosystem-card .eco-brand {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
   letter-spacing: 0.5px;
   margin-bottom: 4px;
@@ -4684,19 +4810,11 @@ Skin Name: Nivo Slider Default Theme
   display: inline-block;
 }
 
-.ecosystem-card .eco-brand-img {
-  max-height: 28px;
-  max-width: 120px;
-  object-fit: contain;
-  display: inline-block;
-  vertical-align: middle;
-}
-
 .ecosystem-card .eco-sub {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.2px;
-  color: #94a3b8;
+  color: #64748b;
   text-transform: uppercase;
 }
 
