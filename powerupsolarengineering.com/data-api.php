@@ -60,10 +60,12 @@ if ($action === 'get_all' || $_SERVER['REQUEST_METHOD'] === 'GET') {
     $photosFile = $dataDir . '/client_photos.json';
     $ecosystemFile = $dataDir . '/ecosystem_brands.json';
     $leadsFile = $dataDir . '/contact_submissions.json';
+    $logoFile = $dataDir . '/site_logo.json';
 
     $photos = file_exists($photosFile) ? json_decode(file_get_contents($photosFile), true) : null;
     $ecosystem = file_exists($ecosystemFile) ? json_decode(file_get_contents($ecosystemFile), true) : null;
     $leads = file_exists($leadsFile) ? json_decode(file_get_contents($leadsFile), true) : null;
+    $logo = file_exists($logoFile) ? json_decode(file_get_contents($logoFile), true) : null;
 
     echo json_encode([
         'status' => 'success',
@@ -71,9 +73,32 @@ if ($action === 'get_all' || $_SERVER['REQUEST_METHOD'] === 'GET') {
         'data' => [
             'clientPhotos' => $photos,
             'ecosystemBrands' => $ecosystem,
-            'contactSubmissions' => $leads
+            'contactSubmissions' => $leads,
+            'siteLogo' => $logo
         ]
     ]);
+    exit;
+}
+
+// -----------------------------------------------------------------------------
+// 1.5 SAVE SITE LOGO & BRANDING (ADMIN ACTION)
+// -----------------------------------------------------------------------------
+if ($action === 'save_logo' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($input)) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
+        exit;
+    }
+
+    if (!empty($input['imageUrl']) && strpos($input['imageUrl'], 'data:image') !== false) {
+        $input['imageUrl'] = saveBase64Image($input['imageUrl'], $uploadsDir, 'site_logo');
+    }
+
+    $logoFile = $dataDir . '/site_logo.json';
+    @file_put_contents($logoFile, json_encode($input, JSON_PRETTY_PRINT));
+
+    echo json_encode(['status' => 'success', 'message' => 'Logo saved live on server', 'data' => $input]);
     exit;
 }
 

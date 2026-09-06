@@ -2942,18 +2942,19 @@ Skin Name: Nivo Slider Default Theme
 }
 /*-----  3.2 Category block      --------*/
 .category-item {
-  margin-bottom: 50px;
+  margin-bottom: 45px;
   text-align: center;
 }
 .category-item .category-image {
   position: relative;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   overflow: hidden;
   text-align: center;
+  border-radius: 6px;
 }
 .category-item .category-image a {
   margin: 0 auto;
-  display: inline-block;
+  display: block;
 }
 .category-item .category-image:before {
   content: "";
@@ -2971,6 +2972,11 @@ Skin Name: Nivo Slider Default Theme
   pointer-events: none;
 }
 .category-item .category-image img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  object-position: center 15%;
+  display: block;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   image-rendering: optimizeQuality;
@@ -2985,11 +2991,13 @@ Skin Name: Nivo Slider Default Theme
 }
 .category-item .category-title {
   margin-bottom: 10px;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 20px;
   text-transform: none;
+  min-height: 26px;
 }
 .category-item .category-text {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 22px;
   font-weight: 400;
 }
@@ -5170,4 +5178,14 @@ Skin Name: Nivo Slider Default Theme
   width: 46px;
   box-shadow: 0 0 10px rgba(244, 118, 41, 0.7);
 }
+
+sup.star, .star-tag {
+  color: #f47629;
+  font-weight: 800;
+  font-size: 85%;
+  line-height: 0;
+  vertical-align: super;
+  margin-left: 1px;
+}
+
 
