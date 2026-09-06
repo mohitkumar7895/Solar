@@ -5000,6 +5000,44 @@ Skin Name: Nivo Slider Default Theme
   }
 }
 
+.ecosystem-slide {
+  flex: 0 0 auto;
+  width: 180px;
+  height: 90px;
+  padding: 10px 18px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ecosystem-slide:hover {
+  transform: translateY(-4px);
+  border-color: var(--theme-primary, #f47629);
+  box-shadow: 0 8px 24px rgba(244, 118, 41, 0.18);
+}
+
+.ecosystem-slide img {
+  width: 100%;
+  height: 100%;
+  max-height: 70px;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.ecosystem-slide:hover img {
+  transform: scale(1.08);
+}
+
 .ecosystem-card {
   flex: 0 0 auto;
   width: 220px;
