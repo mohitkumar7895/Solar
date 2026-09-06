@@ -4976,88 +4976,57 @@ Skin Name: Nivo Slider Default Theme
 
 .ecosystem-card {
   flex: 0 0 auto;
-  min-width: 210px;
-  padding: 12px 20px;
+  width: 220px;
+  height: 90px;
+  padding: 6px 12px;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #e2e8f0;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-  text-align: center;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .ecosystem-card:hover {
   transform: translateY(-4px);
-  border-color: #f47629;
-  box-shadow: 0 8px 20px rgba(244, 118, 41, 0.15);
+  border-color: var(--theme-primary, #f47629);
+  box-shadow: 0 8px 24px rgba(244, 118, 41, 0.18);
 }
 
 .ecosystem-card .eco-brand-logo-wrap {
-  height: 38px;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 4px;
+  margin: 0;
+  padding: 0;
 }
 
 .ecosystem-card .eco-brand-img {
-  max-height: 34px;
-  max-width: 145px;
-  height: auto;
-  width: auto;
+  width: 100%;
+  height: 100%;
+  max-height: 78px;
+  max-width: 100%;
   object-fit: contain;
-  display: inline-block;
+  display: block;
   transition: transform 0.25s ease;
 }
 
 .ecosystem-card:hover .eco-brand-img {
-  transform: scale(1.06);
+  transform: scale(1.08);
 }
 
-.ecosystem-card .eco-brand {
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
+.ecosystem-card .eco-brand,
+.ecosystem-card .eco-sub,
 .ecosystem-card .eco-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
+  display: none !important;
 }
-
-.ecosystem-card .eco-sub {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  color: #64748b;
-  text-transform: uppercase;
-}
-
-/* Brand specific colors */
-.eco-deye { color: #0984e3; }
-.eco-solis { color: #e67e22; }
-.eco-ina { color: #00a8ff; }
-.eco-livguard { color: #d63031; }
-.eco-luminous { color: #1e3799; }
-.eco-tata { color: #0c2461; }
-.eco-waaree { color: #27ae60; }
-.eco-growatt { color: #20bf6b; }
-.eco-havells { color: #eb2f06; }
-.eco-polycab { color: #d35400; }
-.eco-schneider { color: #10ac84; }
-.eco-microtek { color: #2c3e50; }
 
 /* ========================================================
    Services Phone Highlight

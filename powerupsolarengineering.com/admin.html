@@ -607,53 +607,33 @@
 				<div class="col-md-5">
 					<div class="adm-card">
 						<div class="adm-card-header">
-							<h3 class="adm-card-title"><i class="fa fa-plus-circle" style="color: var(--adm-primary);"></i> Add Partner / Brand Logo</h3>
+							<h3 class="adm-card-title"><i class="fa fa-plus-circle" style="color: var(--adm-primary);"></i> Add Partner / Brand Logos</h3>
 						</div>
 						<p style="font-size: 13px; color: #64748b; margin-bottom: 18px;">
-							Upload brand logos (e.g., Tata Power, Deye, Solis, Adani, Growatt) to appear on the homepage ecosystem ticker.
+							Upload brand logos (single or multiple at once) to appear on the homepage ecosystem ticker.
 						</p>
 
-						<form onsubmit="handleBrandAddSubmit(event)">
-							<div class="form-group" style="margin-bottom: 16px;">
-								<label class="adm-label">Upload Partner / Brand Logo Image</label>
-								<div class="dropzone-box" style="padding: 24px 15px;" onclick="document.getElementById('ecoLogoInput').click()">
-									<input type="file" id="ecoLogoInput" accept="image/*" style="display: none;" onchange="handleEcoLogoSelect(event)">
-									<div style="font-size: 32px; color: var(--adm-primary); margin-bottom: 4px;"><i class="fa fa-cloud-upload"></i></div>
-									<div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 3px;">Click or Drag &amp; Drop Brand Logo</div>
-									<div style="font-size: 12px; color: #64748b;">Supports transparent PNG, SVG, JPG or WebP</div>
-								</div>
-								<div id="ecoLogoPreviewContainer" style="display: none; margin-top: 10px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; padding: 10px; border-radius: 8px;">
-									<img id="ecoLogoPreviewImg" src="" style="max-height: 44px; max-width: 150px; object-fit: contain;">
-									<button type="button" class="btn-adm-outline" style="font-size: 11px; padding: 3px 10px; margin-left: 10px;" onclick="removeEcoLogoImage()"><i class="fa fa-times"></i> Remove</button>
-								</div>
+						<div class="form-group" style="margin-bottom: 20px;">
+							<label class="adm-label">Upload Partner Brand Logos (Select Multiple Allowed)</label>
+							<div class="dropzone-box" style="padding: 30px 15px; border: 2px dashed var(--adm-primary); background: #f8fafc; border-radius: 12px; cursor: pointer; text-align: center;" onclick="document.getElementById('ecoLogoInput').click()">
+								<input type="file" id="ecoLogoInput" accept="image/*" multiple style="display: none;" onchange="handleEcoBulkLogoSelect(event)">
+								<div style="font-size: 38px; color: var(--adm-primary); margin-bottom: 8px;"><i class="fa fa-cloud-upload"></i></div>
+								<div style="font-size: 15px; font-weight: 800; color: #1e293b; margin-bottom: 4px;">Click or Drag &amp; Drop Brand Logos</div>
+								<div style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Supports PNG, SVG, JPG, WebP. Select 1 or many files to add together!</div>
+								<button type="button" class="btn-adm" style="margin: 0 auto; display: inline-flex;"><i class="fa fa-folder-open"></i> Browse Logo Files</button>
 							</div>
+							<div id="ecoBulkStatusMsg" style="display: none; margin-top: 10px; font-size: 13px; font-weight: 700; color: #16a34a; text-align: center;"></div>
+						</div>
 
-							<div class="form-group" style="margin-bottom: 14px;">
-								<label class="adm-label">Brand Name <span style="font-size: 11px; color: #64748b; font-weight: 400;">(Optional)</span></label>
-								<input type="text" id="ecoBrandName" class="adm-input" placeholder="e.g. TATA POWER, WAAREE, etc. (auto-filled if blank)" oninput="updateBrandPreview()">
-							</div>
-
-							<div class="form-group" style="margin-bottom: 18px;">
-								<label class="adm-label">Subtitle / Category <span style="font-size: 11px; color: #64748b; font-weight: 400;">(Optional)</span></label>
-								<input type="text" id="ecoBrandSub" class="adm-input" placeholder="e.g. SOLAR MODULES, INVERTERS (optional)" oninput="updateBrandPreview()">
-							</div>
-
-							<!-- Live Card Preview -->
-							<div style="margin-bottom: 20px;">
-								<label class="adm-label">Live Preview on Website Ticker:</label>
-								<div id="ecoLivePreviewCard" class="ecosystem-card" style="margin: 0 auto; max-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-									<div class="eco-brand" id="previewBrandName" style="color: #f47629;">
-										<i class="fa fa-sun-o" id="previewBrandIcon" style="margin-right: 6px;"></i>
-										<span>BRAND NAME</span>
-									</div>
-									<div class="eco-sub" id="previewBrandSub">SOLAR SOLUTIONS</div>
+						<!-- Live Card Preview -->
+						<div style="margin-bottom: 15px;">
+							<label class="adm-label">Live Preview on Website Ticker (Full Border Logo):</label>
+							<div id="ecoLivePreviewCard" class="ecosystem-card" style="margin: 0 auto; width: 220px; height: 90px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+								<div class="eco-brand-logo-wrap" id="previewBrandName" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+									<i class="fa fa-picture-o" style="color: #94a3b8; font-size: 28px;"></i>
 								</div>
 							</div>
-
-							<button type="submit" class="btn-adm" style="width: 100%; justify-content: center;">
-								<i class="fa fa-plus"></i> Add Brand Logo to Homepage Ecosystem
-							</button>
-						</form>
+						</div>
 					</div>
 				</div>
 
@@ -662,7 +642,7 @@
 					<div class="adm-card">
 						<div class="adm-card-header">
 							<h3 class="adm-card-title"><i class="fa fa-sliders" style="color: var(--adm-primary);"></i> Active Ecosystem Brands (<span id="totalBrandsCount">0</span>)</h3>
-							<button class="btn-adm-outline" onclick="handleResetBrands()"><i class="fa fa-refresh"></i> Reset Defaults</button>
+							<button class="btn-adm-outline" onclick="handleResetBrands()"><i class="fa fa-trash"></i> Clear All Logos</button>
 						</div>
 
 						<!-- Homepage Marquee Live Preview -->
@@ -1301,99 +1281,42 @@
 
 
 		// =========================================================================
-		// TAB 2 LOGIC: ECOSYSTEM & BRAND LOGOS
+		// TAB 2 LOGIC: ECOSYSTEM & PARTNER BRAND LOGOS (BULK / MULTI-UPLOAD)
 		// =========================================================================
-		function handleEcoLogoSelect(e) {
-			const file = e.target.files[0];
-			if (!file || !file.type.startsWith("image/")) return;
+		function handleEcoBulkLogoSelect(e) {
+			const files = Array.from(e.target.files || []);
+			if (files.length === 0) return;
 
-			// Auto-infer brand name from file name if blank
-			const nameInput = document.getElementById("ecoBrandName");
-			if (nameInput && !nameInput.value.trim()) {
-				const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").toUpperCase();
-				nameInput.value = cleanName;
+			const statusMsg = document.getElementById("ecoBulkStatusMsg");
+			if (statusMsg) {
+				statusMsg.style.display = "block";
+				statusMsg.innerText = `Uploading ${files.length} brand logo${files.length > 1 ? 's' : ''}...`;
 			}
 
-			const reader = new FileReader();
-			reader.onload = (event) => {
-				const img = new Image();
-				img.onload = () => {
-					const canvas = document.createElement("canvas");
-					const maxDim = 400;
-					let w = img.width;
-					let h = img.height;
-					if (w > maxDim || h > maxDim) {
-						if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
-						else { w = Math.round((w * maxDim) / h); h = maxDim; }
+			let loadedCount = 0;
+			const newBrands = [];
+
+			files.forEach(file => {
+				const reader = new FileReader();
+				reader.onload = (event) => {
+					newBrands.push({
+						name: "",
+						icon: "fa fa-sun-o",
+						logo: event.target.result
+					});
+					loadedCount++;
+					if (loadedCount === files.length) {
+						addMultipleEcosystemBrands(newBrands);
+						renderEcosystemAdmin();
+						if (statusMsg) {
+							statusMsg.innerText = `✓ Successfully added ${files.length} brand logo${files.length > 1 ? 's' : ''}!`;
+							setTimeout(() => { statusMsg.style.display = 'none'; }, 3500);
+						}
+						document.getElementById("ecoLogoInput").value = "";
 					}
-					canvas.width = w;
-					canvas.height = h;
-					const ctx = canvas.getContext("2d");
-					ctx.drawImage(img, 0, 0, w, h);
-					stagedEcoLogoBase64 = canvas.toDataURL("image/png");
-
-					document.getElementById("ecoLogoPreviewImg").src = stagedEcoLogoBase64;
-					document.getElementById("ecoLogoPreviewContainer").style.display = "block";
-					updateBrandPreview();
 				};
-				img.src = event.target.result;
-			};
-			reader.readAsDataURL(file);
-		}
-
-		function removeEcoLogoImage() {
-			stagedEcoLogoBase64 = "";
-			document.getElementById("ecoLogoInput").value = "";
-			document.getElementById("ecoLogoPreviewContainer").style.display = "none";
-			updateBrandPreview();
-		}
-
-		function updateBrandPreview() {
-			const name = (document.getElementById("ecoBrandName") && document.getElementById("ecoBrandName").value.trim()) || "BRAND NAME";
-			const sub = (document.getElementById("ecoBrandSub") && document.getElementById("ecoBrandSub").value.trim()) || "";
-
-			const brandNameContainer = document.getElementById("previewBrandName");
-			if (!brandNameContainer) return;
-
-			if (stagedEcoLogoBase64) {
-				brandNameContainer.innerHTML = `<img src="${stagedEcoLogoBase64}" style="max-height: 28px; max-width: 120px; object-fit: contain; margin-right: 6px;"> <span>${name}</span>`;
-			} else {
-				brandNameContainer.innerHTML = `<i class="fa fa-sun-o" style="color: var(--adm-primary); margin-right: 6px;"></i> <span>${name}</span>`;
-			}
-
-			const subElem = document.getElementById("previewBrandSub");
-			if (subElem) {
-				subElem.innerText = sub || "SOLAR SOLUTIONS";
-			}
-		}
-
-		function handleBrandAddSubmit(e) {
-			e.preventDefault();
-			let name = (document.getElementById("ecoBrandName") && document.getElementById("ecoBrandName").value.trim().toUpperCase()) || "";
-			const sub = (document.getElementById("ecoBrandSub") && document.getElementById("ecoBrandSub").value.trim().toUpperCase()) || "";
-
-			if (!name && !stagedEcoLogoBase64) {
-				alert("Please upload a brand logo image or enter a brand name.");
-				return;
-			}
-
-			if (!name) {
-				name = "SOLAR PARTNER";
-			}
-
-			addEcosystemBrand({
-				name: name,
-				sub: sub,
-				icon: "fa fa-sun-o",
-				color: "#f47629",
-				logo: stagedEcoLogoBase64
+				reader.readAsDataURL(file);
 			});
-
-			// Reset form
-			if (document.getElementById("ecoBrandName")) document.getElementById("ecoBrandName").value = "";
-			if (document.getElementById("ecoBrandSub")) document.getElementById("ecoBrandSub").value = "";
-			removeEcoLogoImage();
-			renderEcosystemAdmin();
 		}
 
 		function renderEcosystemAdmin() {
@@ -1405,22 +1328,30 @@
 
 			// Render Admin Brand Grid
 			const grid = document.getElementById("adminBrandsGrid");
+			if (brands.length === 0) {
+				grid.innerHTML = `<div class="col-xs-12" style="text-align: center; color: #94a3b8; padding: 40px 15px; font-weight: 600;">
+					<i class="fa fa-picture-o" style="font-size: 36px; margin-bottom: 10px; display: block; color: #cbd5e1;"></i>
+					No logos uploaded yet. Click 'Browse Logo Files' on the left to upload partner logos.
+				</div>`;
+				return;
+			}
+
 			grid.innerHTML = brands.map(b => {
 				let visual = "";
 				if (b.logo) {
-					visual = `<img src="${b.logo}" class="eco-preview-img" alt="${b.name}">`;
+					visual = `<img src="${b.logo}" class="eco-preview-img" style="width: 100%; height: 100%; max-height: 75px; object-fit: contain;" alt="Brand Logo">`;
 				} else {
-					visual = `<div style="font-size: 32px; color: ${b.color || '#f47629'}; margin: 10px 0;"><i class="${b.icon || 'fa fa-sun-o'}"></i></div>`;
+					visual = `<div style="font-size: 32px; color: var(--adm-primary); margin: 10px 0;"><i class="${b.icon || 'fa fa-sun-o'}"></i></div>`;
 				}
 
 				return `
 					<div class="col-sm-4 col-xs-6" style="margin-bottom: 15px;">
-						<div class="eco-brand-admin-card">
-							${visual}
-							<div style="font-weight: 800; font-size: 15px; color: ${b.color || '#0f172a'}; margin-bottom: 2px;">${b.name}</div>
-							<div style="font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">${b.sub}</div>
-							<button class="btn-adm-danger" style="width: 100%;" onclick="handleDeleteBrand('${b.id}')">
-								<i class="fa fa-trash"></i> Remove
+						<div class="eco-brand-admin-card" style="padding: 10px; text-align: center; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+							<div style="height: 75px; width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+								${visual}
+							</div>
+							<button class="btn-adm-danger" style="width: 100%; font-size: 11px; padding: 5px 8px; border-radius: 6px;" onclick="handleDeleteBrand('${b.id}')">
+								<i class="fa fa-trash"></i> Delete
 							</button>
 						</div>
 					</div>
@@ -1436,7 +1367,7 @@
 		}
 
 		function handleResetBrands() {
-			if (confirm("Reset ecosystem brands to official Tier-1 default list?")) {
+			if (confirm("Clear all partner brand logos?")) {
 				resetEcosystemBrands();
 				renderEcosystemAdmin();
 			}

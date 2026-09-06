@@ -554,35 +554,22 @@ function resetClientPhotos() {
 // =========================================================================
 // 3. TECHNOLOGY & EQUIPMENT ECOSYSTEM MANAGEMENT
 // =========================================================================
-const DEFAULT_ECOSYSTEM_BRANDS = [
-    { id: "eco-1", name: "DEYE", sub: "INVERTERS & STORAGE", logo: "images/brands/deye.svg" },
-    { id: "eco-2", name: "SOLIS", sub: "SOLAR INVERTERS", logo: "images/brands/solis.svg" },
-    { id: "eco-3", name: "INA SOLAR", sub: "TOGETHER WE SHINE", logo: "images/brands/ina-solar.svg" },
-    { id: "eco-4", name: "LIVGUARD", sub: "ENERGY UNLIMITED", logo: "images/brands/livguard.svg" },
-    { id: "eco-5", name: "LUMINOUS", sub: "SOLAR SOLUTIONS", logo: "images/brands/luminous.svg" },
-    { id: "eco-6", name: "TATA POWER SOLAR", sub: "TIER-1 MODULES", logo: "images/brands/tata-solar.svg" },
-    { id: "eco-7", name: "WAAREE", sub: "ONE WITH THE SUN", logo: "images/brands/waaree.svg" },
-    { id: "eco-8", name: "GROWATT", sub: "SMART ENERGY", logo: "images/brands/growatt.svg" },
-    { id: "eco-9", name: "HAVELLS", sub: "SOLAR & SWITCHGEAR", logo: "images/brands/havells.svg" },
-    { id: "eco-10", name: "POLYCAB", sub: "SOLAR WIRES & CABLES", logo: "images/brands/polycab.svg" },
-    { id: "eco-11", name: "SCHNEIDER", sub: "SURGE & PROTECTION", logo: "images/brands/schneider.svg" },
-    { id: "eco-12", name: "ADANI SOLAR", sub: "TIER-1 MODULES", logo: "images/brands/adani-solar.svg" }
-];
+const DEFAULT_ECOSYSTEM_BRANDS = [];
 
-const ECOSYSTEM_STORAGE_KEY = "liana_solar_ecosystem_brands_v2";
+const ECOSYSTEM_STORAGE_KEY = "liana_solar_ecosystem_brands_v6";
 
 function getEcosystemBrands() {
     try {
         const stored = localStorage.getItem(ECOSYSTEM_STORAGE_KEY);
-        if (stored) {
+        if (stored !== null) {
             const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            if (Array.isArray(parsed)) return parsed;
         }
     } catch (e) {
         console.error("Error reading ecosystem brands:", e);
     }
-    localStorage.setItem(ECOSYSTEM_STORAGE_KEY, JSON.stringify(DEFAULT_ECOSYSTEM_BRANDS));
-    return DEFAULT_ECOSYSTEM_BRANDS;
+    localStorage.setItem(ECOSYSTEM_STORAGE_KEY, JSON.stringify([]));
+    return [];
 }
 
 function saveEcosystemBrands(brands) {
@@ -601,16 +588,31 @@ function saveEcosystemBrands(brands) {
 function addEcosystemBrand(brandData) {
     const brands = getEcosystemBrands();
     const newBrand = {
-        id: "eco-" + Date.now(),
-        name: brandData.name || "NEW BRAND",
-        sub: brandData.sub || "SOLAR SOLUTIONS",
+        id: "eco-" + Date.now() + "-" + Math.random().toString(36).substr(2, 4),
+        name: brandData.name || "PARTNER BRAND",
         icon: brandData.icon || "fa fa-sun-o",
-        color: brandData.color || "#f47629",
+        color: brandData.color || "var(--theme-primary, #f47629)",
         logo: brandData.logo || ""
     };
     brands.push(newBrand);
     saveEcosystemBrands(brands);
     return newBrand;
+}
+
+function addMultipleEcosystemBrands(brandsList) {
+    if (!Array.isArray(brandsList) || brandsList.length === 0) return;
+    const brands = getEcosystemBrands();
+    brandsList.forEach((b, idx) => {
+        brands.push({
+            id: "eco-" + Date.now() + "-" + idx + "-" + Math.random().toString(36).substr(2, 4),
+            name: b.name || "PARTNER BRAND",
+            icon: "fa fa-sun-o",
+            color: "var(--theme-primary, #f47629)",
+            logo: b.logo || ""
+        });
+    });
+    saveEcosystemBrands(brands);
+    return brands;
 }
 
 function deleteEcosystemBrand(id) {
@@ -620,8 +622,8 @@ function deleteEcosystemBrand(id) {
 }
 
 function resetEcosystemBrands() {
-    saveEcosystemBrands(DEFAULT_ECOSYSTEM_BRANDS);
-    return DEFAULT_ECOSYSTEM_BRANDS;
+    saveEcosystemBrands([]);
+    return [];
 }
 
 // Render dynamic ecosystem track on website (e.g. index.html)
@@ -630,30 +632,43 @@ function renderWebsiteEcosystem(targetElementId = "ecosystemTrack") {
     if (!container) return;
 
     const brands = getEcosystemBrands();
-    if (brands.length === 0) return;
+    const ecoSection = document.querySelector(".ecosystem-section");
+
+    if (brands.length === 0) {
+        if (targetElementId === "adminEcoTrackPreview") {
+            container.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 25px 15px; font-size: 13px; font-weight: 600;"><i class="fa fa-info-circle"></i> No brand logos uploaded yet. Upload your partner logos from the left panel to display them here in real-time.</div>`;
+        } else {
+            container.innerHTML = "";
+            if (ecoSection && targetElementId === "ecosystemTrack") {
+                ecoSection.style.display = "none";
+            }
+        }
+        return;
+    }
+
+    if (ecoSection && targetElementId === "ecosystemTrack") {
+        ecoSection.style.display = "block";
+    }
 
     const generateSetHtml = (set) => set.map(b => {
         let visualHtml = "";
         if (b.logo) {
-            visualHtml = `<img src="${b.logo}" class="eco-brand-img" alt="${b.name}">`;
-        } else if (b.icon) {
-            visualHtml = `<i class="${b.icon}" style="color: ${b.color || '#f47629'}; margin-right: 6px;"></i><span>${b.name}</span>`;
+            visualHtml = `<img src="${b.logo}" class="eco-brand-img" alt="${b.name || 'Brand Logo'}">`;
         } else {
-            visualHtml = `<span class="eco-dot" style="background: ${b.color || '#f47629'}; margin-right: 6px;"></span><span>${b.name}</span>`;
+            visualHtml = `<i class="${b.icon || 'fa fa-sun-o'}" style="color: ${b.color || 'var(--theme-primary, #f47629)'}; font-size: 26px; margin-right: 8px;"></i><span style="font-weight: 800; font-size: 16px;">${b.name}</span>`;
         }
 
         return `
-            <div class="ecosystem-card">
+            <div class="ecosystem-card" title="${b.name || ''}">
                 <div class="eco-brand-logo-wrap">
                     ${visualHtml}
                 </div>
-                <div class="eco-sub">${b.sub}</div>
             </div>
         `;
     }).join("");
 
     const singleSet = generateSetHtml(brands);
-    container.innerHTML = singleSet + singleSet;
+    container.innerHTML = singleSet + (brands.length >= 3 ? singleSet : "");
 }
 
 
@@ -918,8 +933,35 @@ function syncWithServer() {
         });
 }
 
+// -------------------------------------------------------------------------
+// 8. INITIAL WEBSITE OPENING PRELOADER
+// -------------------------------------------------------------------------
+function initSitePreloader() {
+    const loader = document.getElementById("loader-wrapper");
+    if (!loader) return;
+
+    const dismissLoader = () => {
+        if (!loader.classList.contains("loaded")) {
+            loader.classList.add("loaded");
+            setTimeout(() => {
+                loader.style.display = "none";
+            }, 650);
+        }
+    };
+
+    if (document.readyState === "complete") {
+        setTimeout(dismissLoader, 1100);
+    } else {
+        window.addEventListener("load", () => {
+            setTimeout(dismissLoader, 900);
+        });
+        setTimeout(dismissLoader, 2200);
+    }
+}
+
 // Global initialization
 window.addEventListener("DOMContentLoaded", () => {
+    initSitePreloader();
     applySiteTheme();
     applySiteLogo();
     initScrollAnimations();
