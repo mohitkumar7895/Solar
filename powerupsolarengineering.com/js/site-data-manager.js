@@ -62,15 +62,18 @@ function getSiteTheme() {
     try {
         const stored = localStorage.getItem(THEME_STORAGE_KEY);
         if (stored) {
-            if (THEME_PRESETS[stored]) return stored;
+            if (THEME_PRESETS[stored]) return THEME_PRESETS[stored];
             const parsed = JSON.parse(stored);
-            if (parsed && typeof parsed === "string" && THEME_PRESETS[parsed]) return parsed;
-            if (parsed && typeof parsed === "object" && (parsed.id || parsed.primary)) return parsed.id || parsed;
+            if (parsed && typeof parsed === "string" && THEME_PRESETS[parsed]) return THEME_PRESETS[parsed];
+            if (parsed && typeof parsed === "object") {
+                if (parsed.id && THEME_PRESETS[parsed.id]) return THEME_PRESETS[parsed.id];
+                if (parsed.primary) return parsed;
+            }
         }
     } catch (e) {
         console.error("Error reading site theme:", e);
     }
-    return DEFAULT_SITE_THEME;
+    return THEME_PRESETS[DEFAULT_SITE_THEME];
 }
 
 function saveSiteTheme(themeInput) {
@@ -86,7 +89,7 @@ function saveSiteTheme(themeInput) {
     }
 
     localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(themeKey));
-    applySiteTheme();
+    applySiteTheme(themeObj);
 
     fetch(`${API_ENDPOINT}?action=save_theme`, {
         method: "POST",
@@ -97,9 +100,20 @@ function saveSiteTheme(themeInput) {
     return themeObj;
 }
 
-function applySiteTheme() {
-    const themeRaw = getSiteTheme();
-    const themeConfig = (typeof themeRaw === "string" && THEME_PRESETS[themeRaw]) ? THEME_PRESETS[themeRaw] : (THEME_PRESETS[DEFAULT_SITE_THEME]);
+function resetSiteTheme() {
+    return saveSiteTheme("solar_orange");
+}
+
+function applySiteTheme(explicitTheme) {
+    let themeConfig = explicitTheme;
+    if (!themeConfig) {
+        themeConfig = getSiteTheme();
+    } else if (typeof themeConfig === "string" && THEME_PRESETS[themeConfig]) {
+        themeConfig = THEME_PRESETS[themeConfig];
+    }
+    if (!themeConfig || !themeConfig.primary) {
+        themeConfig = THEME_PRESETS[DEFAULT_SITE_THEME];
+    }
     
     let styleTag = document.getElementById("dynamicThemeStyles");
     if (!styleTag) {
