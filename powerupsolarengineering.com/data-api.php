@@ -35,26 +35,38 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 
 // Helper to save base64 image to real file
 function saveBase64Image($base64Data, $uploadsDir, $prefix = 'img') {
+    // Return early if not a data URI (already a URL or path)
     if (strpos($base64Data, 'data:image') === false) {
-        return $base64Data; // Already a URL or relative path
+        return $base64Data;
     }
-    
+
+    // Parse the data URI
     list($type, $data) = explode(';', $base64Data);
-    list(, $data)      = explode(',', $data);
-    $data = base64_decode($data);
-    
+    list(, $data) = explode(',', $data);
+    $binaryData = base64_decode($data);
+    if ($binaryData === false) {
+        return $base64Data; // Decoding failed
+    }
+
+    // Determine file extension
     $ext = 'jpg';
     if (strpos($type, 'png') !== false) $ext = 'png';
     else if (strpos($type, 'webp') !== false) $ext = 'webp';
     else if (strpos($type, 'svg') !== false) $ext = 'svg';
-    
-    $fileName = $prefix . '_' . time() . '_' . rand(1000, 9999) . '.' . $ext;
+
+    // Deterministic filename using MD5 hash of image data
+    $hash = md5($binaryData);
+    // Sanitize prefix for filesystem safety
+    $safePrefix = preg_replace('/[^a-zA-Z0-9_-]/', '_', $prefix);
+    $fileName = $safePrefix . '_' . $hash . '.' . $ext;
     $filePath = $uploadsDir . '/' . $fileName;
-    
-    if (@file_put_contents($filePath, $data)) {
-        return 'uploads/' . $fileName;
+
+    // Save the file only if it does not already exist
+    if (!file_exists($filePath)) {
+        @file_put_contents($filePath, $binaryData);
     }
-    return $base64Data;
+    // Return relative path for storage
+    return 'uploads/' . $fileName;
 }
 
 // -----------------------------------------------------------------------------
