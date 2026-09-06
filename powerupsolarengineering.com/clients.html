@@ -175,7 +175,7 @@
 												<strong class="logo-name">LIANA</strong>
 												<span class="logo-sub">SOLAR</span>
 											</span>
-											<span class="logo-tagline">— POWERING A BRIGHTER TOMORROW —</span>
+											<span class="logo-tagline">— POWERING A BRIGHT TOMORROW —</span>
 										</span>
 									</a>
 								</div>
@@ -232,12 +232,25 @@
 		<!-- //Breadcrumbs Block -->
 		<!-- Block -->
 		<div class="block block-content-top">
-			<div class="container">
-				
-				<!-- Heading -->
+			<div class="container">				<!-- Heading -->
 				<div style="margin-bottom: 25px;">
 					<h1 style="margin-bottom: 5px;">Our <b>Client Installations</b></h1>
-					<p class="font20" style="margin-bottom: 0; color: #64748b;">Solar installation site photos across Uttar Pradesh.</p>
+					<p class="font20" style="margin-bottom: 0; color: #64748b;">Solar installation site photos across Uttar Pradesh. Search by client name, city or system capacity.</p>
+				</div>
+
+				<!-- Search & Filter Toolbar -->
+				<div class="client-toolbar scroll-reveal">
+					<div class="client-search-wrap">
+						<i class="fa fa-search client-search-icon"></i>
+						<input type="text" id="clientSearchInput" class="client-search-input" placeholder="Search client by name, city, system type (e.g. Sharma, Lucknow, 15 HP Chakki, 50 kW, Kanpur)..." oninput="filterClientPhotos()">
+					</div>
+					<div class="client-filter-pills" id="clientCategoryFilters">
+						<button class="client-filter-pill active" onclick="setClientCategory('all', this)"><i class="fa fa-th-large"></i> All Installations (<span id="countAll">0</span>)</button>
+						<button class="client-filter-pill" onclick="setClientCategory('residential', this)"><i class="fa fa-home"></i> Residential Rooftop (<span id="countRes">0</span>)</button>
+						<button class="client-filter-pill" onclick="setClientCategory('commercial', this)"><i class="fa fa-building"></i> Commercial &amp; Industrial (<span id="countComm">0</span>)</button>
+						<button class="client-filter-pill" onclick="setClientCategory('agricultural', this)"><i class="fa fa-cogs"></i> Solar Atta Chakki (<span id="countAgri">0</span>)</button>
+						<button class="client-filter-pill" onclick="setClientCategory('hybrid', this)"><i class="fa fa-bolt"></i> Hybrid &amp; Off-Grid (<span id="countHyb">0</span>)</button>
+					</div>
 				</div>
 
 				<!-- Client Photos Dynamic Grid -->
@@ -254,7 +267,10 @@
 	<!-- Lightbox Modal -->
 	<div id="lightboxModal" class="client-lightbox-modal" onclick="closeLightbox()">
 		<span class="client-lightbox-close">&times;</span>
-		<img id="lightboxImg" class="client-lightbox-img" src="" alt="Client Solar Site Full Photo" onclick="event.stopPropagation()">
+		<div style="text-align: center; max-width: 90vw;" onclick="event.stopPropagation()">
+			<img id="lightboxImg" class="client-lightbox-img" src="" alt="Client Solar Site Full Photo" style="max-height: 80vh; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+			<div id="lightboxCaption" style="color: #ffffff; font-size: 15px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.8);"></div>
+		</div>
 	</div>
 
 	<!-- Footer -->
@@ -282,7 +298,7 @@
 									<strong class="logo-name">LIANA</strong>
 									<span class="logo-sub">SOLAR</span>
 								</span>
-								<span class="logo-tagline">— POWERING A BRIGHTER TOMORROW —</span>
+								<span class="logo-tagline">— POWERING A BRIGHT TOMORROW —</span>
 							</span>
 						</a>
 					</div>
@@ -346,52 +362,116 @@
 	<script src="js/plugins/slick.min.js"></script>
 	<script src="js/custom.js"></script>
 	<script src="js/site-data-manager.js"></script>
-	<script src="js/clients-manager.js"></script>
 	<script>
-		function renderClientPhotos() {
+		let activeClientCategory = 'all';
+
+		function setClientCategory(cat, btn) {
+			activeClientCategory = cat;
+			document.querySelectorAll(".client-filter-pill").forEach(b => b.classList.remove("active"));
+			if (btn) btn.classList.add("active");
+			filterClientPhotos();
+		}
+
+		function filterClientPhotos() {
+			const query = (document.getElementById("clientSearchInput") ? document.getElementById("clientSearchInput").value : "").toLowerCase().trim();
+			const allPhotos = getClientPhotos();
+
+			// Update Counts
+			const countAll = allPhotos.length;
+			const countRes = allPhotos.filter(p => (p.category || 'residential') === 'residential').length;
+			const countComm = allPhotos.filter(p => (p.category || '') === 'commercial').length;
+			const countAgri = allPhotos.filter(p => (p.category || '') === 'agricultural').length;
+			const countHyb = allPhotos.filter(p => (p.category || '') === 'hybrid' || (p.category || '') === 'offgrid').length;
+
+			if (document.getElementById("countAll")) document.getElementById("countAll").innerText = countAll;
+			if (document.getElementById("countRes")) document.getElementById("countRes").innerText = countRes;
+			if (document.getElementById("countComm")) document.getElementById("countComm").innerText = countComm;
+			if (document.getElementById("countAgri")) document.getElementById("countAgri").innerText = countAgri;
+			if (document.getElementById("countHyb")) document.getElementById("countHyb").innerText = countHyb;
+
+			const filtered = allPhotos.filter(p => {
+				const name = (p.name || '').toLowerCase();
+				const city = (p.city || '').toLowerCase();
+				const cap = (p.capacity || '').toLowerCase();
+				const cat = (p.category || 'residential').toLowerCase();
+
+				const matchesCat = (activeClientCategory === 'all') || 
+					(activeClientCategory === 'hybrid' ? (cat === 'hybrid' || cat === 'offgrid') : cat === activeClientCategory);
+
+				const matchesQuery = !query || name.includes(query) || city.includes(query) || cap.includes(query);
+
+				return matchesCat && matchesQuery;
+			});
+
+			renderClientPhotosCards(filtered);
+		}
+
+		function renderClientPhotosCards(photos) {
 			const container = document.getElementById("clientPhotosGrid");
 			if (!container) return;
 
-			const photos = getClientPhotos();
-
 			if (photos.length === 0) {
 				container.innerHTML = `
-					<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-						<div style="font-size: 44px; color: #cbd5e1; margin-bottom: 12px;"><i class="fa fa-picture-o"></i></div>
-						<h4 style="color: #64748b; font-weight: 600;">Client project gallery updating soon.</h4>
+					<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+						<div style="font-size: 40px; color: #94a3b8; margin-bottom: 12px;"><i class="fa fa-search"></i></div>
+						<h4 style="color: #475569; font-weight: 700; margin-bottom: 6px;">No client projects match your search</h4>
+						<p style="color: #64748b; font-size: 14px; margin-bottom: 0;">Try searching for a different city, client name, or select "All Installations".</p>
 					</div>
 				`;
 				return;
 			}
 
 			container.innerHTML = photos.map((p, idx) => `
-				<div class="client-photo-item" onclick="openLightbox('${p.image}')">
-					<img src="${p.image}" alt="Client Solar Installation Site" onerror="this.src='images/solar/hero-rooftop-home.jpg'">
-					<div class="client-photo-overlay">
-						<div class="client-photo-zoom-icon">
-							<i class="fa fa-search-plus"></i>
+				<div class="client-photo-card scroll-reveal">
+					<div class="client-card-img-wrap" onclick="openLightbox('${p.image}', '${(p.name || '').replace(/'/g, "\\'")}', '${(p.capacity || '').replace(/'/g, "\\'")}', '${(p.city || '').replace(/'/g, "\\'")}')">
+						<img src="${p.image}" class="client-card-img" alt="${p.name || 'Client Solar Site'}" onerror="this.src='images/solar/hero-rooftop-home.jpg'">
+						<span class="client-card-badge">${p.capacity || 'Solar Installation'}</span>
+					</div>
+					<div class="client-card-info">
+						<div>
+							<h3 class="client-card-title">${p.name || 'Solar Client'}</h3>
+							<div class="client-card-location">
+								<i class="fa fa-map-marker" style="color: #ef4444;"></i> ${p.city || 'Uttar Pradesh'}
+							</div>
+						</div>
+						<div class="client-card-meta">
+							<span><i class="fa fa-calendar-check-o" style="color: #16a34a;"></i> Commissioned: ${p.date || '2026'}</span>
+							<a href="javascript:void(0)" onclick="openLightbox('${p.image}', '${(p.name || '').replace(/'/g, "\\'")}', '${(p.capacity || '').replace(/'/g, "\\'")}', '${(p.city || '').replace(/'/g, "\\'")}')" style="color: var(--theme-primary, #f47629); font-weight: 700; text-decoration: none;">
+								View <i class="fa fa-arrow-right"></i>
+							</a>
 						</div>
 					</div>
 				</div>
 			`).join("");
+
+			if (typeof initScrollAnimations === 'function') {
+				initScrollAnimations();
+			}
 		}
 
-		function openLightbox(src) {
+		function renderClientPhotos() {
+			filterClientPhotos();
+		}
+
+		function openLightbox(src, name, cap, city) {
 			const modal = document.getElementById("lightboxModal");
 			const img = document.getElementById("lightboxImg");
-			img.src = src;
-			modal.style.display = "flex";
+			const caption = document.getElementById("lightboxCaption");
+			if (modal && img) {
+				img.src = src;
+				if (caption) {
+					caption.innerHTML = `<strong>${name || 'Solar Installation Site'}</strong> • ${cap || 'Commissioned Project'} (${city || 'UP'})`;
+				}
+				modal.style.display = "flex";
+			}
 		}
 
 		function closeLightbox() {
 			const modal = document.getElementById("lightboxModal");
-			modal.style.display = "none";
+			if (modal) {
+				modal.style.display = "none";
+			}
 		}
-
-		// Close on Escape key
-		document.addEventListener("keydown", (e) => {
-			if (e.key === "Escape") closeLightbox();
-		});
 
 		window.addEventListener("DOMContentLoaded", () => {
 			renderClientPhotos();

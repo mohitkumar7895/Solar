@@ -61,11 +61,13 @@ if ($action === 'get_all' || $_SERVER['REQUEST_METHOD'] === 'GET') {
     $ecosystemFile = $dataDir . '/ecosystem_brands.json';
     $leadsFile = $dataDir . '/contact_submissions.json';
     $logoFile = $dataDir . '/site_logo.json';
+    $themeFile = $dataDir . '/site_theme.json';
 
     $photos = file_exists($photosFile) ? json_decode(file_get_contents($photosFile), true) : null;
     $ecosystem = file_exists($ecosystemFile) ? json_decode(file_get_contents($ecosystemFile), true) : null;
     $leads = file_exists($leadsFile) ? json_decode(file_get_contents($leadsFile), true) : null;
     $logo = file_exists($logoFile) ? json_decode(file_get_contents($logoFile), true) : null;
+    $theme = file_exists($themeFile) ? json_decode(file_get_contents($themeFile), true) : null;
 
     echo json_encode([
         'status' => 'success',
@@ -74,9 +76,28 @@ if ($action === 'get_all' || $_SERVER['REQUEST_METHOD'] === 'GET') {
             'clientPhotos' => $photos,
             'ecosystemBrands' => $ecosystem,
             'contactSubmissions' => $leads,
-            'siteLogo' => $logo
+            'siteLogo' => $logo,
+            'siteTheme' => $theme
         ]
     ]);
+    exit;
+}
+
+// -----------------------------------------------------------------------------
+// 1.4 SAVE SITE THEME (ADMIN ACTION)
+// -----------------------------------------------------------------------------
+if ($action === 'save_theme' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($input) && !is_string($input)) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
+        exit;
+    }
+
+    $themeFile = $dataDir . '/site_theme.json';
+    @file_put_contents($themeFile, json_encode($input, JSON_PRETTY_PRINT));
+
+    echo json_encode(['status' => 'success', 'message' => 'Theme saved live on server', 'data' => $input]);
     exit;
 }
 

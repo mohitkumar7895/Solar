@@ -39,6 +39,217 @@
 /*-------  1.1 Typography Styles --------*/
 
 
+/* ==========================================================================
+   0. Dynamic Theme Variables & Global Accents
+   ========================================================================== */
+:root {
+  --theme-primary: #f47629;
+  --theme-primary-hover: #d95e14;
+  --theme-secondary: #16a34a;
+  --theme-accent: #1e3a8a;
+  --theme-gradient: linear-gradient(135deg, #f47629 0%, #ff9f43 100%);
+  --theme-badge-bg: rgba(244, 118, 41, 0.12);
+  --theme-badge-color: #f47629;
+}
+
+/* ==========================================================================
+   0.1 Smooth Scroll Reveal Animations
+   ========================================================================== */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px) scale(0.98);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-35px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(35px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.scroll-reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.scroll-reveal.visible,
+.scroll-reveal-left.visible,
+.scroll-reveal-right.visible,
+.scroll-reveal-scale.visible {
+  opacity: 1 !important;
+  transform: translate(0, 0) scale(1) !important;
+}
+
+/* Card & Element Micro-Hover Interactions */
+.client-photo-card, .service-box, .box, .pricing-box, .bulb-block, .eco-brand-admin-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+.client-photo-card:hover, .service-box:hover, .bulb-block:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+.skew {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+.skew:hover {
+  transform: translateY(-5px);
+}
+
+/* ==========================================================================
+   0.2 Clients Page Search Bar & Modern Installation Cards
+   ========================================================================== */
+.client-toolbar {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+.client-search-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+.client-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 18px;
+}
+.client-search-input {
+  width: 100%;
+  height: 50px;
+  padding: 10px 18px 10px 48px;
+  border-radius: 10px;
+  border: 1.5px solid #cbd5e1;
+  font-size: 15px;
+  background: #f8fafc;
+  color: #0f172a;
+  transition: all 0.25s ease;
+}
+.client-search-input:focus {
+  border-color: var(--theme-primary, #f47629);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(244, 118, 41, 0.12);
+  outline: none;
+}
+.client-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.client-filter-pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.client-filter-pill:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.client-filter-pill.active {
+  background: var(--theme-primary, #f47629);
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(244, 118, 41, 0.25);
+}
+.client-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+.client-photo-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.client-photo-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+}
+.client-card-img-wrap {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: #f1f5f9;
+  cursor: pointer;
+}
+.client-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.client-photo-card:hover .client-card-img {
+  transform: scale(1.06);
+}
+.client-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  letter-spacing: 0.3px;
+}
+.client-card-info {
+  padding: 16px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.client-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  line-height: 1.35;
+}
+.client-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 8px;
+}
+.client-card-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: #0284c7;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -1135,7 +1346,7 @@ header .logo .logo-bolt {
 }
 .logo-name {
   font-family: 'Roboto', 'Inter', sans-serif;
-  font-weight: 800;
+  font-weight: 900;
   font-size: 38px;
   color: #1e3a8a;
   letter-spacing: -0.5px;
@@ -1152,15 +1363,31 @@ header .logo .logo-bolt {
 .logo-tagline {
   font-family: 'Roboto', 'Inter', sans-serif;
   font-weight: 800;
-  font-size: 10px;
-  color: #16a34a;
-  letter-spacing: 2px;
+  font-size: 12px;
+  color: #15803d;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  margin-top: 4px;
-  display: block;
+  margin-top: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(22, 163, 74, 0.08);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+  box-shadow: 0 1px 4px rgba(22, 163, 74, 0.06);
 }
 .logo-words--invert .logo-name {
   color: #ffffff;
+}
+.logo-words--invert .logo-sub {
+  color: #4ade80;
+}
+.logo-words--invert .logo-tagline {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.14);
+  border-color: rgba(74, 222, 128, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 .logo-words--invert .logo-sub {
   color: #4ade80;

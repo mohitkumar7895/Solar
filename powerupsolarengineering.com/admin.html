@@ -404,6 +404,34 @@
 			cursor: pointer;
 		}
 
+		/* Theme Studio */
+		.theme-preset-card {
+			background: #ffffff;
+			border: 2px solid #e2e8f0;
+			border-radius: 12px;
+			padding: 16px 20px;
+			margin-bottom: 14px;
+			cursor: pointer;
+			transition: all 0.25s ease;
+		}
+		.theme-preset-card:hover {
+			border-color: #cbd5e1;
+			background: #f8fafc;
+			transform: translateY(-2px);
+		}
+		.theme-preset-card.active {
+			border-color: var(--adm-primary);
+			background: #fff7ed;
+			box-shadow: 0 4px 14px rgba(244, 118, 41, 0.12);
+		}
+		.theme-badge-pill {
+			font-size: 11px;
+			font-weight: 700;
+			padding: 3px 8px;
+			border-radius: 12px;
+			text-transform: uppercase;
+		}
+
 		/* Auth Modal */
 		.auth-modal {
 			position: fixed;
@@ -478,6 +506,9 @@
 				</button>
 				<button class="adm-tab-btn" onclick="switchTab('brandingTab', this)">
 					<i class="fa fa-picture-o"></i> Site Logo &amp; Branding
+				</button>
+				<button class="adm-tab-btn" onclick="switchTab('themeTab', this)">
+					<i class="fa fa-paint-brush"></i> Theme Studio
 				</button>
 				<button class="adm-tab-btn" onclick="switchTab('settingsTab', this)">
 					<i class="fa fa-cog"></i> Settings &amp; Backup
@@ -583,55 +614,28 @@
 						</p>
 
 						<form onsubmit="handleBrandAddSubmit(event)">
-							<div class="form-group" style="margin-bottom: 15px;">
-								<label class="adm-label">Brand Name <span style="color: #ef4444;">*</span></label>
-								<input type="text" id="ecoBrandName" class="adm-input" required placeholder="e.g. TATA POWER SOLAR" oninput="updateBrandPreview()">
-							</div>
-
-							<div class="form-group" style="margin-bottom: 15px;">
-								<label class="adm-label">Category / Subtitle <span style="color: #ef4444;">*</span></label>
-								<input type="text" id="ecoBrandSub" class="adm-input" required placeholder="e.g. TIER-1 MODULES &amp; EPC" oninput="updateBrandPreview()">
-							</div>
-
-							<div class="form-group" style="margin-bottom: 15px;">
-								<label class="adm-label">Brand Logo Image (PNG / SVG / JPG)</label>
-								<div class="dropzone-box" style="padding: 20px 10px;" onclick="document.getElementById('ecoLogoInput').click()">
+							<div class="form-group" style="margin-bottom: 16px;">
+								<label class="adm-label">Upload Partner / Brand Logo Image</label>
+								<div class="dropzone-box" style="padding: 24px 15px;" onclick="document.getElementById('ecoLogoInput').click()">
 									<input type="file" id="ecoLogoInput" accept="image/*" style="display: none;" onchange="handleEcoLogoSelect(event)">
-									<div style="font-size: 28px; color: var(--adm-primary); margin-bottom: 4px;"><i class="fa fa-cloud-upload"></i></div>
-									<div style="font-size: 13px; font-weight: 700; color: #1e293b;">Click to upload logo image</div>
-									<div style="font-size: 11px; color: #64748b;">Transparent PNG or SVG recommended</div>
+									<div style="font-size: 32px; color: var(--adm-primary); margin-bottom: 4px;"><i class="fa fa-cloud-upload"></i></div>
+									<div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 3px;">Click or Drag &amp; Drop Brand Logo</div>
+									<div style="font-size: 12px; color: #64748b;">Supports transparent PNG, SVG, JPG or WebP</div>
 								</div>
-								<div id="ecoLogoPreviewContainer" style="display: none; margin-top: 10px; text-align: center; background: #f1f5f9; padding: 10px; border-radius: 8px;">
-									<img id="ecoLogoPreviewImg" src="" style="max-height: 40px; max-width: 140px; object-fit: contain;">
-									<button type="button" class="btn-adm-outline" style="font-size: 11px; padding: 2px 8px; margin-left: 10px;" onclick="removeEcoLogoImage()">Remove</button>
+								<div id="ecoLogoPreviewContainer" style="display: none; margin-top: 10px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; padding: 10px; border-radius: 8px;">
+									<img id="ecoLogoPreviewImg" src="" style="max-height: 44px; max-width: 150px; object-fit: contain;">
+									<button type="button" class="btn-adm-outline" style="font-size: 11px; padding: 3px 10px; margin-left: 10px;" onclick="removeEcoLogoImage()"><i class="fa fa-times"></i> Remove</button>
 								</div>
 							</div>
 
-							<!-- Fallback Icon & Accent Color -->
-							<div class="row">
-								<div class="col-xs-6">
-									<div class="form-group" style="margin-bottom: 18px;">
-										<label class="adm-label">Icon (if no image)</label>
-										<select id="ecoBrandIcon" class="adm-input" onchange="updateBrandPreview()">
-											<option value="fa fa-sun-o">☀️ Sun (fa-sun-o)</option>
-											<option value="fa fa-bolt">⚡ Bolt (fa-bolt)</option>
-											<option value="fa fa-flash">⚡ Flash (fa-flash)</option>
-											<option value="fa fa-shield">🛡️ Shield (fa-shield)</option>
-											<option value="fa fa-leaf">🍃 Leaf (fa-leaf)</option>
-											<option value="fa fa-plug">🔌 Plug (fa-plug)</option>
-											<option value="fa fa-cog">⚙️ Gear (fa-cog)</option>
-											<option value="fa fa-microchip">💻 Chip (fa-microchip)</option>
-											<option value="fa fa-check-circle">✔️ Check (fa-check-circle)</option>
-											<option value="fa fa-circle">⚪ Dot (fa-circle)</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-xs-6">
-									<div class="form-group" style="margin-bottom: 18px;">
-										<label class="adm-label">Accent Color</label>
-										<input type="color" id="ecoBrandColor" value="#f47629" style="width: 100%; height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; padding: 2px;" oninput="updateBrandPreview()">
-									</div>
-								</div>
+							<div class="form-group" style="margin-bottom: 14px;">
+								<label class="adm-label">Brand Name <span style="font-size: 11px; color: #64748b; font-weight: 400;">(Optional)</span></label>
+								<input type="text" id="ecoBrandName" class="adm-input" placeholder="e.g. TATA POWER, WAAREE, etc. (auto-filled if blank)" oninput="updateBrandPreview()">
+							</div>
+
+							<div class="form-group" style="margin-bottom: 18px;">
+								<label class="adm-label">Subtitle / Category <span style="font-size: 11px; color: #64748b; font-weight: 400;">(Optional)</span></label>
+								<input type="text" id="ecoBrandSub" class="adm-input" placeholder="e.g. SOLAR MODULES, INVERTERS (optional)" oninput="updateBrandPreview()">
 							</div>
 
 							<!-- Live Card Preview -->
@@ -647,7 +651,7 @@
 							</div>
 
 							<button type="submit" class="btn-adm" style="width: 100%; justify-content: center;">
-								<i class="fa fa-plus"></i> Add Brand to Homepage Ecosystem
+								<i class="fa fa-plus"></i> Add Brand Logo to Homepage Ecosystem
 							</button>
 						</form>
 					</div>
@@ -693,20 +697,56 @@
 			<div class="adm-card">
 				<div class="adm-card-header">
 					<h3 class="adm-card-title"><i class="fa fa-cloud-upload" style="color: var(--adm-primary);"></i> Upload Client Solar Site Photos</h3>
-					<span style="font-size: 13px; color: #64748b;">(Multiple photos supported with automatic compression)</span>
+					<span style="font-size: 13px; color: #64748b;">(Upload photo with client name &amp; location for visitor search)</span>
+				</div>
+
+				<div class="row" style="margin-bottom: 12px;">
+					<div class="col-sm-6">
+						<div class="form-group" style="margin-bottom: 14px;">
+							<label class="adm-label">Client / Business Name <span style="color: #ef4444;">*</span></label>
+							<input type="text" id="clientInputName" class="adm-input" placeholder="e.g. Rajesh Sharma / Patel Agro Mill" value="">
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group" style="margin-bottom: 14px;">
+							<label class="adm-label">City / Location <span style="color: #ef4444;">*</span></label>
+							<input type="text" id="clientInputCity" class="adm-input" placeholder="e.g. Gomti Nagar, Lucknow / Kanpur" value="">
+						</div>
+					</div>
+				</div>
+
+				<div class="row" style="margin-bottom: 12px;">
+					<div class="col-sm-6">
+						<div class="form-group" style="margin-bottom: 14px;">
+							<label class="adm-label">System Capacity / Specs <span style="color: #ef4444;">*</span></label>
+							<input type="text" id="clientInputCapacity" class="adm-input" placeholder="e.g. 5 kW On-Grid / 15 HP Atta Chakki / 50 kW Commercial" value="">
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group" style="margin-bottom: 14px;">
+							<label class="adm-label">Installation Category</label>
+							<select id="clientInputCategory" class="adm-input">
+								<option value="residential">Residential Rooftop Solar</option>
+								<option value="commercial">Commercial &amp; Industrial Solar</option>
+								<option value="agricultural">Solar Atta Chakki / Agriculture</option>
+								<option value="hybrid">Hybrid &amp; Battery Storage</option>
+								<option value="offgrid">Off-Grid Solar Plant</option>
+							</select>
+						</div>
+					</div>
 				</div>
 
 				<div class="dropzone-box" id="dropzoneBox" onclick="document.getElementById('photoFileInput').click()">
 					<input type="file" id="photoFileInput" multiple accept="image/*" style="display: none;" onchange="handlePhotoFileSelect(event)">
 					<div class="dropzone-icon"><i class="fa fa-picture-o"></i></div>
-					<div style="font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">Click to choose photos, or drag &amp; drop here</div>
+					<div style="font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">Click to choose photo(s), or drag &amp; drop here</div>
 					<div style="font-size: 13px; color: #64748b;">Select JPG, PNG, WEBP images of actual solar rooftops &amp; chakki projects.</div>
 				</div>
 
 				<!-- Staging Area -->
 				<div id="photoStagingArea" style="display: none; margin-top: 20px;">
 					<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-						<h5 style="font-weight: 700; margin: 0; color: #0f172a;">Selected Photos Ready to Publish (<span id="photoStagingCount">0</span>)</h5>
+						<h5 style="font-weight: 700; margin: 0; color: #0f172a;">Selected Photo(s) Ready to Publish (<span id="photoStagingCount">0</span>)</h5>
 						<button class="btn-adm-outline" onclick="clearPhotoStaging()"><i class="fa fa-times"></i> Cancel</button>
 					</div>
 					<div id="photoStagingGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px;"></div>
@@ -758,32 +798,10 @@
 					<!-- Left Column: Controls & Uploader -->
 					<div class="col-md-6">
 						<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; margin-bottom: 20px;">
-							<label class="adm-label" style="margin-bottom: 12px; font-size: 14px;">Select Logo Display Mode</label>
 							
-							<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
-								<label id="modeCardDefault" class="branding-mode-card active" onclick="setLogoMode('default')">
-									<input type="radio" name="logoModeRadio" value="default" checked style="display: none;">
-									<div style="font-weight: 700; color: #0f172a; margin-bottom: 4px;">
-										<i class="fa fa-bolt" style="color: #f47629; margin-right: 4px;"></i> Default Typography
-									</div>
-									<div style="font-size: 12px; color: #64748b; line-height: 1.4;">
-										Bolt icon + Bold Name + 100% Crisp Visible Tagline (Recommended)
-									</div>
-								</label>
-
-								<label id="modeCardImage" class="branding-mode-card" onclick="setLogoMode('image')">
-									<input type="radio" name="logoModeRadio" value="image" style="display: none;">
-									<div style="font-weight: 700; color: #0f172a; margin-bottom: 4px;">
-										<i class="fa fa-file-image-o" style="color: #3b82f6; margin-right: 4px;"></i> Upload Custom Image
-									</div>
-									<div style="font-size: 12px; color: #64748b; line-height: 1.4;">
-										Upload direct PNG/JPG/WebP logo image file
-									</div>
-								</label>
-							</div>
-
-							<!-- Settings for Default Typography Mode -->
-							<div id="defaultModeSettings">
+							<!-- Brand Name & Tagline Text -->
+							<div style="margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+								<label class="adm-label" style="font-size: 14px; margin-bottom: 10px;"><i class="fa fa-font" style="color: var(--adm-primary);"></i> Brand Name &amp; Tagline</label>
 								<div class="row">
 									<div class="col-xs-6">
 										<div class="form-group" style="margin-bottom: 12px;">
@@ -798,26 +816,27 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group" style="margin-bottom: 14px;">
+								<div class="form-group" style="margin-bottom: 0;">
 									<label class="adm-label">Tagline Text</label>
-									<input type="text" id="logoTaglineInput" class="adm-input" value="POWERING A BRIGHTER TOMORROW" placeholder="e.g. POWERING A BRIGHTER TOMORROW" oninput="updateLogoLivePreview()">
-									<small style="color: #64748b; font-size: 11px;">Rendered in bold high-contrast green (#16a34a) below brand name.</small>
+									<input type="text" id="logoTaglineInput" class="adm-input" value="POWERING A BRIGHT TOMORROW" placeholder="e.g. POWERING A BRIGHT TOMORROW" oninput="updateLogoLivePreview()">
+									<small style="color: #64748b; font-size: 11px;">Rendered prominently beneath brand logo.</small>
 								</div>
 							</div>
 
-							<!-- Settings for Custom Image Mode -->
-							<div id="imageModeSettings" style="display: none;">
-								<div class="form-group" style="margin-bottom: 14px;">
-									<label class="adm-label">Upload Custom Logo File</label>
-									<div class="dropzone-box" id="logoDropzone" onclick="document.getElementById('logoFileInput').click()" style="padding: 22px 15px;">
-										<div class="dropzone-icon" style="font-size: 34px;"><i class="fa fa-cloud-upload"></i></div>
-										<div style="font-weight: 700; color: #0f172a; font-size: 14px; margin-bottom: 4px;">Click or Drag &amp; Drop Logo Image</div>
-										<div style="font-size: 12px; color: #64748b;">Supports PNG (transparent), JPG, WebP or SVG</div>
-										<input type="file" id="logoFileInput" accept="image/*" style="display: none;" onchange="handleLogoFileInput(event)">
-									</div>
+							<!-- Custom Image Upload (Optional) -->
+							<div style="margin-bottom: 18px;">
+								<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+									<label class="adm-label" style="font-size: 14px; margin: 0;"><i class="fa fa-picture-o" style="color: var(--adm-primary);"></i> Upload Custom Logo Image (Optional)</label>
+									<button type="button" id="btnClearLogoImage" class="btn-adm-outline" style="font-size: 11px; padding: 2px 8px; display: none;" onclick="clearCustomLogoImage()"><i class="fa fa-times"></i> Use Default</button>
+								</div>
+								<div class="dropzone-box" id="logoDropzone" onclick="document.getElementById('logoFileInput').click()" style="padding: 20px 15px; margin-bottom: 14px;">
+									<div class="dropzone-icon" style="font-size: 32px;"><i class="fa fa-cloud-upload"></i></div>
+									<div style="font-weight: 700; color: #0f172a; font-size: 14px; margin-bottom: 3px;">Click or Drag &amp; Drop Logo Image</div>
+									<div style="font-size: 12px; color: #64748b;">Supports transparent PNG, JPG, WebP or SVG</div>
+									<input type="file" id="logoFileInput" accept="image/*" style="display: none;" onchange="handleLogoFileInput(event)">
 								</div>
 
-								<div class="form-group" style="margin-bottom: 14px;">
+								<div class="form-group" style="margin-bottom: 0;">
 									<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
 										<label class="adm-label" style="margin: 0;">Logo Display Height</label>
 										<span id="logoHeightVal" style="font-weight: 700; color: var(--adm-primary); font-size: 13px;">95px</span>
@@ -872,7 +891,101 @@
 
 
 		<!-- ========================================================================= -->
-		<!-- TAB 5: SETTINGS & BACKUP -->
+		<!-- TAB 5: THEME STUDIO -->
+		<!-- ========================================================================= -->
+		<div id="themeTab" class="tab-content-panel" style="display: none;">
+			<div class="adm-card" style="margin-bottom: 25px;">
+				<div class="adm-card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+					<div>
+						<h3 class="adm-card-title"><i class="fa fa-paint-brush" style="color: var(--adm-primary);"></i> Website Theme Studio</h3>
+						<p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">
+							Choose a global color theme for your website. Buttons, accents, badges, and navigation highlights update automatically.
+						</p>
+					</div>
+					<div style="display: flex; gap: 8px;">
+						<a href="index.html" target="_blank" class="btn-adm-outline"><i class="fa fa-eye"></i> View Live Site</a>
+						<button class="btn-adm-outline" onclick="handleResetThemeSettings()"><i class="fa fa-refresh"></i> Reset Default Theme</button>
+					</div>
+				</div>
+
+				<div class="row">
+					<!-- Left: Theme Selectors -->
+					<div class="col-md-7">
+						<label class="adm-label" style="font-size: 14px; margin-bottom: 14px;">Select Active Website Theme Preset</label>
+
+						<!-- Theme Option 1: Solar Gold & Electric Orange -->
+						<div id="themeCard_solar_orange" class="theme-preset-card active" onclick="selectThemePreset('solar_orange')">
+							<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+								<div style="font-weight: 800; font-size: 15px; color: #0f172a;">
+									<i class="fa fa-sun-o" style="color: #f47629; margin-right: 6px;"></i> 1. Solar Gold &amp; Electric Orange (Classic)
+								</div>
+								<span id="themeBadge_solar_orange" class="theme-badge-pill" style="background: rgba(244, 118, 41, 0.15); color: #f47629;">Active Preset</span>
+							</div>
+							<p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">High-energy vibrant solar orange with sun gold gradients and emerald green accents.</p>
+							<div style="display: flex; gap: 8px; align-items: center;">
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #f47629; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Primary: #f47629"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #ff9f43; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Gradient: #ff9f43"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #16a34a; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Secondary: #16a34a"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #1e3a8a; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Deep Navy: #1e3a8a"></div>
+							</div>
+						</div>
+
+						<!-- Theme Option 2: Royal Navy & Emerald Green (Brand Logo Matched) -->
+						<div id="themeCard_logo_navy_green" class="theme-preset-card" onclick="selectThemePreset('logo_navy_green')">
+							<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+								<div style="font-weight: 800; font-size: 15px; color: #0f172a;">
+									<i class="fa fa-shield" style="color: #1e3a8a; margin-right: 6px;"></i> 2. Royal Navy &amp; Emerald Green (Logo Matched)
+								</div>
+								<span id="themeBadge_logo_navy_green" class="theme-badge-pill" style="display: none; background: rgba(30, 58, 138, 0.15); color: #1e3a8a;">Active Preset</span>
+							</div>
+							<p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Directly matched to the Liana Solar brand logo colors — Deep Corporate Royal Navy (#1e3a8a) &amp; Vibrant Eco Emerald Green (#16a34a).</p>
+							<div style="display: flex; gap: 8px; align-items: center;">
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #1e3a8a; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Primary Navy: #1e3a8a"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #16a34a; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Eco Green: #16a34a"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #f59e0b; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Gold: #f59e0b"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #2563eb; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Accent: #2563eb"></div>
+							</div>
+						</div>
+
+						<!-- Theme Option 3: Clean Modern Eco Green & Sky Blue -->
+						<div id="themeCard_eco_emerald" class="theme-preset-card" onclick="selectThemePreset('eco_emerald')">
+							<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+								<div style="font-weight: 800; font-size: 15px; color: #0f172a;">
+									<i class="fa fa-leaf" style="color: #15803d; margin-right: 6px;"></i> 3. Clean Modern Eco Green &amp; Sky Blue
+								</div>
+								<span id="themeBadge_eco_emerald" class="theme-badge-pill" style="display: none; background: rgba(21, 128, 61, 0.15); color: #15803d;">Active Preset</span>
+							</div>
+							<p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Fresh nature green theme with modern clean cyan accents for clean energy branding.</p>
+							<div style="display: flex; gap: 8px; align-items: center;">
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #15803d; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Forest Green: #15803d"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #22c55e; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Light Green: #22c55e"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #0284c7; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Sky Blue: #0284c7"></div>
+								<div style="width: 28px; height: 28px; border-radius: 50%; background: #eab308; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15);" title="Sun Gold: #eab308"></div>
+							</div>
+						</div>
+
+						<div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+							<button class="btn-adm" onclick="handleSaveActiveTheme()"><i class="fa fa-save"></i> Save &amp; Apply Theme to Live Website</button>
+							<span id="themeSaveToast" style="display: none; color: #16a34a; font-weight: 700; font-size: 13px;">
+								<i class="fa fa-check-circle"></i> Theme saved and applied live!
+							</span>
+						</div>
+					</div>
+
+					<!-- Right: Live Component Preview -->
+					<div class="col-md-5">
+						<label class="adm-label" style="font-size: 14px; margin-bottom: 14px;">Live Component Preview</label>
+						<div id="themePreviewBox" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.04);">
+							<!-- Rendered live -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- ========================================================================= -->
+		<!-- TAB 6: SETTINGS & BACKUP -->
 		<!-- ========================================================================= -->
 		<div id="settingsTab" class="tab-content-panel" style="display: none;">
 			
@@ -970,6 +1083,7 @@
 			if (tabId === 'ecosystemTab') renderEcosystemAdmin();
 			if (tabId === 'photosTab') renderPhotosAdmin();
 			if (tabId === 'brandingTab') initBrandingTab();
+			if (tabId === 'themeTab') initThemeTab();
 		}
 
 		// Init Dashboard
@@ -978,6 +1092,7 @@
 			renderEcosystemAdmin();
 			renderPhotosAdmin();
 			initBrandingTab();
+			initThemeTab();
 			setupPhotoDragAndDrop();
 		}
 
@@ -1192,6 +1307,13 @@
 			const file = e.target.files[0];
 			if (!file || !file.type.startsWith("image/")) return;
 
+			// Auto-infer brand name from file name if blank
+			const nameInput = document.getElementById("ecoBrandName");
+			if (nameInput && !nameInput.value.trim()) {
+				const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").toUpperCase();
+				nameInput.value = cleanName;
+			}
+
 			const reader = new FileReader();
 			reader.onload = (event) => {
 				const img = new Image();
@@ -1227,43 +1349,49 @@
 		}
 
 		function updateBrandPreview() {
-			const name = document.getElementById("ecoBrandName").value.trim() || "BRAND NAME";
-			const sub = document.getElementById("ecoBrandSub").value.trim() || "SOLAR SOLUTIONS";
-			const icon = document.getElementById("ecoBrandIcon").value;
-			const color = document.getElementById("ecoBrandColor").value;
+			const name = (document.getElementById("ecoBrandName") && document.getElementById("ecoBrandName").value.trim()) || "BRAND NAME";
+			const sub = (document.getElementById("ecoBrandSub") && document.getElementById("ecoBrandSub").value.trim()) || "";
 
 			const brandNameContainer = document.getElementById("previewBrandName");
-			brandNameContainer.style.color = color;
+			if (!brandNameContainer) return;
 
 			if (stagedEcoLogoBase64) {
 				brandNameContainer.innerHTML = `<img src="${stagedEcoLogoBase64}" style="max-height: 28px; max-width: 120px; object-fit: contain; margin-right: 6px;"> <span>${name}</span>`;
 			} else {
-				brandNameContainer.innerHTML = `<i class="${icon}" style="color: ${color}; margin-right: 6px;"></i> <span>${name}</span>`;
+				brandNameContainer.innerHTML = `<i class="fa fa-sun-o" style="color: var(--adm-primary); margin-right: 6px;"></i> <span>${name}</span>`;
 			}
 
-			document.getElementById("previewBrandSub").innerText = sub;
+			const subElem = document.getElementById("previewBrandSub");
+			if (subElem) {
+				subElem.innerText = sub || "SOLAR SOLUTIONS";
+			}
 		}
 
 		function handleBrandAddSubmit(e) {
 			e.preventDefault();
-			const name = document.getElementById("ecoBrandName").value.trim().toUpperCase();
-			const sub = document.getElementById("ecoBrandSub").value.trim().toUpperCase();
-			const icon = document.getElementById("ecoBrandIcon").value;
-			const color = document.getElementById("ecoBrandColor").value;
+			let name = (document.getElementById("ecoBrandName") && document.getElementById("ecoBrandName").value.trim().toUpperCase()) || "";
+			const sub = (document.getElementById("ecoBrandSub") && document.getElementById("ecoBrandSub").value.trim().toUpperCase()) || "";
+
+			if (!name && !stagedEcoLogoBase64) {
+				alert("Please upload a brand logo image or enter a brand name.");
+				return;
+			}
+
+			if (!name) {
+				name = "SOLAR PARTNER";
+			}
 
 			addEcosystemBrand({
 				name: name,
 				sub: sub,
-				icon: icon,
-				color: color,
+				icon: "fa fa-sun-o",
+				color: "#f47629",
 				logo: stagedEcoLogoBase64
 			});
 
-			alert(`Brand "${name}" added successfully to the Ecosystem Marquee!`);
-
 			// Reset form
-			document.getElementById("ecoBrandName").value = "";
-			document.getElementById("ecoBrandSub").value = "";
+			if (document.getElementById("ecoBrandName")) document.getElementById("ecoBrandName").value = "";
+			if (document.getElementById("ecoBrandSub")) document.getElementById("ecoBrandSub").value = "";
 			removeEcoLogoImage();
 			renderEcosystemAdmin();
 		}
@@ -1420,17 +1548,32 @@
 		function saveStagedClientPhotos() {
 			if (stagedPhotoBase64List.length === 0) return;
 
-			addClientPhotos(stagedPhotoBase64List);
+			const name = (document.getElementById("clientInputName") && document.getElementById("clientInputName").value.trim()) || "Client Solar Installation";
+			const city = (document.getElementById("clientInputCity") && document.getElementById("clientInputCity").value.trim()) || "Uttar Pradesh";
+			const capacity = (document.getElementById("clientInputCapacity") && document.getElementById("clientInputCapacity").value.trim()) || "Rooftop Solar Plant";
+			const category = (document.getElementById("clientInputCategory") && document.getElementById("clientInputCategory").value) || "residential";
+
+			addClientPhotos(stagedPhotoBase64List, {
+				name: name,
+				city: city,
+				capacity: capacity,
+				category: category
+			});
 			
 			const status = document.getElementById("photoUploadStatus");
 			status.style.display = "block";
 			status.style.background = "#dcfce7";
 			status.style.color = "#15803d";
-			status.innerHTML = `<i class="fa fa-check-circle"></i> Successfully published ${stagedPhotoBase64List.length} photo(s)! They are now live on the Clients page.`;
+			status.innerHTML = `<i class="fa fa-check-circle"></i> Successfully published ${stagedPhotoBase64List.length} photo(s) for "${name}" (${city})! Now live &amp; searchable on Clients page.`;
 
 			setTimeout(() => {
 				status.style.display = "none";
-			}, 4000);
+			}, 4500);
+
+			// Reset form fields
+			if (document.getElementById("clientInputName")) document.getElementById("clientInputName").value = "";
+			if (document.getElementById("clientInputCity")) document.getElementById("clientInputCity").value = "";
+			if (document.getElementById("clientInputCapacity")) document.getElementById("clientInputCapacity").value = "";
 
 			clearPhotoStaging();
 			renderPhotosAdmin();
@@ -1452,13 +1595,29 @@
 			}
 
 			container.innerHTML = photos.map(p => `
-				<div class="admin-photo-card">
-					<img src="${p.image}" class="admin-photo-img" alt="Client Photo" onerror="this.src='images/solar/hero-rooftop-home.jpg'">
-					<div style="padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-top: 1px solid #f1f5f9;">
-						<span style="font-size: 11px; color: #64748b;"><i class="fa fa-calendar"></i> ${p.date || 'Site'}</span>
-						<button class="btn-adm-danger" onclick="handleDeletePhoto('${p.id}')">
-							<i class="fa fa-trash"></i> Delete
-						</button>
+				<div class="admin-photo-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+					<div style="height: 140px; overflow: hidden; position: relative;">
+						<img src="${p.image}" class="admin-photo-img" style="width: 100%; height: 100%; object-fit: cover;" alt="${p.name || 'Client Photo'}" onerror="this.src='images/solar/hero-rooftop-home.jpg'">
+						<span style="position: absolute; top: 6px; right: 6px; background: rgba(15,23,42,0.75); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
+							${p.category || 'Solar'}
+						</span>
+					</div>
+					<div style="padding: 10px 12px; background: #ffffff;">
+						<div style="font-weight: 800; font-size: 13px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;">
+							${p.name || 'Client Site'}
+						</div>
+						<div style="font-size: 11px; color: #64748b; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+							<i class="fa fa-map-marker" style="color: #ea580c;"></i> <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.city || 'UP'}</span>
+						</div>
+						<div style="font-size: 11px; font-weight: 700; color: #16a34a; margin-bottom: 8px;">
+							<i class="fa fa-bolt"></i> ${p.capacity || 'Solar Installation'}
+						</div>
+						<div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+							<span style="font-size: 10px; color: #94a3b8;"><i class="fa fa-calendar"></i> ${p.date || 'Active'}</span>
+							<button class="btn-adm-danger" style="padding: 4px 8px; font-size: 11px;" onclick="handleDeletePhoto('${p.id}')">
+								<i class="fa fa-trash"></i> Delete
+							</button>
+						</div>
 					</div>
 				</div>
 			`).join("");
@@ -1495,44 +1654,35 @@
 			const tagInput = document.getElementById("logoTaglineInput");
 			const heightSlider = document.getElementById("logoHeightSlider");
 			const heightVal = document.getElementById("logoHeightVal");
+			const btnClear = document.getElementById("btnClearLogoImage");
 
 			if (nameInput) nameInput.value = currentBrandingConfig.name || "Liana";
 			if (subInput) subInput.value = currentBrandingConfig.sub || "Solar";
-			if (tagInput) tagInput.value = currentBrandingConfig.tagline || "POWERING A BRIGHTER TOMORROW";
+			if (tagInput) tagInput.value = currentBrandingConfig.tagline || "POWERING A BRIGHT TOMORROW";
 			
 			const height = currentBrandingConfig.height || 95;
 			if (heightSlider) heightSlider.value = height;
 			if (heightVal) heightVal.innerText = height + "px";
 
-			setLogoMode(currentBrandingConfig.mode || 'default', false);
+			if (btnClear) {
+				btnClear.style.display = (currentBrandingConfig.mode === 'image' && currentBrandingConfig.imageUrl) ? 'inline-block' : 'none';
+			}
+
 			setupLogoDragAndDrop();
 			updateLogoLivePreview();
 		}
 
-		function setLogoMode(mode, triggerUpdate = true) {
-			if (!currentBrandingConfig) currentBrandingConfig = getSiteLogo();
-			currentBrandingConfig.mode = mode;
-
-			const defaultCard = document.getElementById("modeCardDefault");
-			const imageCard = document.getElementById("modeCardImage");
-			const defaultSettings = document.getElementById("defaultModeSettings");
-			const imageSettings = document.getElementById("imageModeSettings");
-
-			if (mode === 'default') {
-				if (defaultCard) defaultCard.classList.add("active");
-				if (imageCard) imageCard.classList.remove("active");
-				if (defaultSettings) defaultSettings.style.display = "block";
-				if (imageSettings) imageSettings.style.display = "none";
-			} else {
-				if (imageCard) imageCard.classList.add("active");
-				if (defaultCard) defaultCard.classList.remove("active");
-				if (defaultSettings) defaultSettings.style.display = "none";
-				if (imageSettings) imageSettings.style.display = "block";
+		function clearCustomLogoImage() {
+			stagedLogoImageBase64 = "";
+			if (currentBrandingConfig) {
+				currentBrandingConfig.mode = 'default';
+				currentBrandingConfig.imageUrl = "";
 			}
-
-			if (triggerUpdate) {
-				updateLogoLivePreview();
-			}
+			const fileInput = document.getElementById("logoFileInput");
+			if (fileInput) fileInput.value = "";
+			const btnClear = document.getElementById("btnClearLogoImage");
+			if (btnClear) btnClear.style.display = 'none';
+			updateLogoLivePreview();
 		}
 
 		function handleLogoHeightSlider(val) {
@@ -1551,9 +1701,12 @@
 			reader.onload = (event) => {
 				stagedLogoImageBase64 = event.target.result;
 				if (currentBrandingConfig) {
+					currentBrandingConfig.mode = 'image';
 					currentBrandingConfig.imageUrl = stagedLogoImageBase64;
 				}
-				setLogoMode('image');
+				const btnClear = document.getElementById("btnClearLogoImage");
+				if (btnClear) btnClear.style.display = 'inline-block';
+				updateLogoLivePreview();
 			};
 			reader.readAsDataURL(file);
 		}
@@ -1601,7 +1754,7 @@
 			const mode = currentBrandingConfig ? currentBrandingConfig.mode : 'default';
 			const name = (document.getElementById("logoNameInput") && document.getElementById("logoNameInput").value) || "Liana";
 			const sub = (document.getElementById("logoSubInput") && document.getElementById("logoSubInput").value) || "Solar";
-			const tagline = (document.getElementById("logoTaglineInput") && document.getElementById("logoTaglineInput").value) || "POWERING A BRIGHTER TOMORROW";
+			const tagline = (document.getElementById("logoTaglineInput") && document.getElementById("logoTaglineInput").value) || "POWERING A BRIGHT TOMORROW";
 			const height = currentBrandingConfig && currentBrandingConfig.height ? currentBrandingConfig.height : 95;
 			const imgUrl = stagedLogoImageBase64 || (currentBrandingConfig && currentBrandingConfig.imageUrl) || "images/logo.jpeg";
 
@@ -1629,13 +1782,13 @@
 				navPreview.innerHTML = `
 					<div class="logo">
 						<a href="javascript:void(0)" class="logo-link-brand" style="display: inline-flex; align-items: center; text-decoration: none;">
-							<img src="images/bolt.gif" class="logo-bolt" alt="Liana Solar" style="height: 52px; width: auto; margin-right: 10px;">
+							<img src="images/bolt.gif" class="logo-bolt" alt="Liana Solar" style="height: 52px; width: auto; margin-right: 12px;">
 							<span class="logo-words" style="display: flex; flex-direction: column; justify-content: center; line-height: 1.1;">
-								<span class="logo-brand-row" style="display: flex; align-items: baseline; gap: 4px;">
-									<strong class="logo-name" style="font-size: 26px; font-weight: 900; color: #1e3a8a; letter-spacing: -0.5px; text-transform: uppercase;">${name}</strong>
-									<span class="logo-sub" style="font-size: 26px; font-weight: 800; color: #16a34a; letter-spacing: -0.5px; text-transform: uppercase;">${sub}</span>
+								<span class="logo-brand-row" style="display: flex; align-items: baseline; gap: 6px;">
+									<strong class="logo-name" style="font-size: 28px; font-weight: 900; color: #1e3a8a; letter-spacing: -0.5px; text-transform: uppercase;">${name}</strong>
+									<span class="logo-sub" style="font-size: 22px; font-weight: 800; color: #16a34a; letter-spacing: -0.5px; text-transform: uppercase;">${sub}</span>
 								</span>
-								<span class="logo-tagline" style="font-size: 8.5px; font-weight: 800; letter-spacing: 2px; color: #16a34a; text-transform: uppercase; margin-top: 2px;">— ${tagline} —</span>
+								<span class="logo-tagline" style="font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: #15803d; text-transform: uppercase; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px; background: rgba(22, 163, 74, 0.08); padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(22, 163, 74, 0.25);">— ${tagline} —</span>
 							</span>
 						</a>
 					</div>
@@ -1643,13 +1796,13 @@
 				footerPreview.innerHTML = `
 					<div class="logo">
 						<a href="javascript:void(0)" class="logo-link-brand" style="display: inline-flex; align-items: center; text-decoration: none;">
-							<img src="images/bolt.gif" class="logo-bolt" alt="Liana Solar" style="height: 52px; width: auto; margin-right: 10px;">
+							<img src="images/bolt.gif" class="logo-bolt" alt="Liana Solar" style="height: 52px; width: auto; margin-right: 12px;">
 							<span class="logo-words logo-words--invert" style="display: flex; flex-direction: column; justify-content: center; line-height: 1.1;">
-								<span class="logo-brand-row" style="display: flex; align-items: baseline; gap: 4px;">
-									<strong class="logo-name" style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; text-transform: uppercase;">${name}</strong>
-									<span class="logo-sub" style="font-size: 26px; font-weight: 800; color: #22c55e; letter-spacing: -0.5px; text-transform: uppercase;">${sub}</span>
+								<span class="logo-brand-row" style="display: flex; align-items: baseline; gap: 6px;">
+									<strong class="logo-name" style="font-size: 28px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; text-transform: uppercase;">${name}</strong>
+									<span class="logo-sub" style="font-size: 22px; font-weight: 800; color: #22c55e; letter-spacing: -0.5px; text-transform: uppercase;">${sub}</span>
 								</span>
-								<span class="logo-tagline" style="font-size: 8.5px; font-weight: 800; letter-spacing: 2px; color: #4ade80; text-transform: uppercase; margin-top: 2px;">— ${tagline} —</span>
+								<span class="logo-tagline" style="font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: #86efac; text-transform: uppercase; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px; background: rgba(34, 197, 94, 0.15); padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(74, 222, 128, 0.35);">— ${tagline} —</span>
 							</span>
 						</a>
 					</div>
@@ -1658,12 +1811,13 @@
 		}
 
 		function handleSaveLogoSettings() {
-			const mode = currentBrandingConfig ? currentBrandingConfig.mode : 'default';
+			const hasImage = !!(stagedLogoImageBase64 || (currentBrandingConfig && currentBrandingConfig.imageUrl && currentBrandingConfig.mode === 'image'));
+			const mode = hasImage ? 'image' : 'default';
 			const name = (document.getElementById("logoNameInput") && document.getElementById("logoNameInput").value.trim()) || "Liana";
 			const sub = (document.getElementById("logoSubInput") && document.getElementById("logoSubInput").value.trim()) || "Solar";
-			const tagline = (document.getElementById("logoTaglineInput") && document.getElementById("logoTaglineInput").value.trim()) || "POWERING A BRIGHTER TOMORROW";
+			const tagline = (document.getElementById("logoTaglineInput") && document.getElementById("logoTaglineInput").value.trim()) || "POWERING A BRIGHT TOMORROW";
 			const height = parseInt(document.getElementById("logoHeightSlider").value, 10) || 95;
-			const imageUrl = stagedLogoImageBase64 || (currentBrandingConfig ? currentBrandingConfig.imageUrl : "images/logo.jpeg");
+			const imageUrl = stagedLogoImageBase64 || (currentBrandingConfig ? currentBrandingConfig.imageUrl : "");
 
 			const updatedConfig = {
 				mode,
@@ -1705,7 +1859,120 @@
 
 
 		// =========================================================================
-		// TAB 5 LOGIC: SETTINGS & BACKUP
+		// TAB 5 LOGIC: WEBSITE THEME STUDIO
+		// =========================================================================
+		let activeThemePresetId = 'solar_orange';
+
+		function initThemeTab() {
+			const currentTheme = getSiteTheme();
+			activeThemePresetId = currentTheme.id || 'solar_orange';
+			selectThemePreset(activeThemePresetId, false);
+		}
+
+		function selectThemePreset(presetId, triggerApply = false) {
+			activeThemePresetId = presetId;
+			const preset = THEME_PRESETS[presetId] || THEME_PRESETS['solar_orange'];
+
+			['solar_orange', 'logo_navy_green', 'eco_emerald'].forEach(id => {
+				const card = document.getElementById(`themeCard_${id}`);
+				const badge = document.getElementById(`themeBadge_${id}`);
+				if (card) {
+					if (id === presetId) card.classList.add('active');
+					else card.classList.remove('active');
+				}
+				if (badge) {
+					if (id === presetId) badge.style.display = 'inline-block';
+					else badge.style.display = 'none';
+				}
+			});
+
+			renderThemePreview(preset);
+
+			if (triggerApply) {
+				applySiteTheme(preset);
+			}
+		}
+
+		function renderThemePreview(theme) {
+			const preview = document.getElementById("themePreviewBox");
+			if (!preview) return;
+
+			preview.innerHTML = `
+				<div style="margin-bottom: 14px;">
+					<div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; margin-bottom: 6px;">
+						Theme: <strong style="color: ${theme.primary};">${theme.name}</strong>
+					</div>
+					<div style="display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;">
+						<span style="display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: ${theme.primaryLight}; color: ${theme.primary};">
+							<i class="fa fa-circle"></i> Primary: ${theme.primary}
+						</span>
+						<span style="display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: rgba(0,0,0,0.05); color: ${theme.secondary};">
+							Secondary: ${theme.secondary}
+						</span>
+					</div>
+				</div>
+
+				<div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; background: #fafafa; margin-bottom: 14px;">
+					<div style="font-weight: 800; font-size: 14px; color: ${theme.textDark}; margin-bottom: 8px;">
+						Sample Component Preview
+					</div>
+					<p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">
+						See how buttons, badges, and cards look with this theme:
+					</p>
+
+					<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+						<button style="background: linear-gradient(135deg, ${theme.primary} 0%, ${theme.primaryGradient} 100%); color: #ffffff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12);">
+							<i class="fa fa-bolt"></i> Get Free Quote
+						</button>
+						<button style="background: transparent; color: ${theme.primary}; border: 1.5px solid ${theme.primary}; padding: 7px 14px; border-radius: 6px; font-weight: 700; font-size: 12px;">
+							Explore Solutions
+						</button>
+					</div>
+
+					<div style="display: flex; gap: 6px; flex-wrap: wrap;">
+						<span style="background: ${theme.primary}; color: #ffffff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">
+							PM Surya Ghar Subsidy
+						</span>
+						<span style="background: ${theme.primaryLight}; color: ${theme.primaryDark}; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; border: 1px solid ${theme.primary};">
+							5 kW On-Grid
+						</span>
+					</div>
+				</div>
+			`;
+		}
+
+		function handleSaveActiveTheme() {
+			const preset = THEME_PRESETS[activeThemePresetId] || THEME_PRESETS['solar_orange'];
+			saveSiteTheme(preset);
+			
+			const toast = document.getElementById("themeSaveToast");
+			if (toast) {
+				toast.innerHTML = `<i class="fa fa-check-circle"></i> Theme "${preset.name}" saved &amp; applied live across the entire website!`;
+				toast.style.display = "inline-flex";
+				setTimeout(() => {
+					toast.style.display = "none";
+				}, 4000);
+			}
+		}
+
+		function handleResetThemeSettings() {
+			if (confirm("Reset website theme to default Solar Gold & Electric Orange?")) {
+				resetSiteTheme();
+				initThemeTab();
+				const toast = document.getElementById("themeSaveToast");
+				if (toast) {
+					toast.innerHTML = `<i class="fa fa-check-circle"></i> Reset to default theme!`;
+					toast.style.display = "inline-flex";
+					setTimeout(() => {
+						toast.style.display = "none";
+					}, 4000);
+				}
+			}
+		}
+
+
+		// =========================================================================
+		// TAB 6 LOGIC: SETTINGS & BACKUP
 		// =========================================================================
 		function handleChangePin(e) {
 			e.preventDefault();
