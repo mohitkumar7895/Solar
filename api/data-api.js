@@ -27,11 +27,11 @@ let pool = null;
 function getPool() {
   if (!pool) {
     pool = mysql.createPool({
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT),
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      host: process.env.DB_HOST || '193.203.184.149',
+      port: parseInt(process.env.DB_PORT || '3306'),
+      user: process.env.DB_USER || 'u830887968_solar',
+      password: process.env.DB_PASSWORD || 'jEaAyse88eF!@D_solar1',
+      database: process.env.DB_NAME || 'u830887968_solar',
       waitForConnections: true,
       connectionLimit: 5,
       queueLimit: 0,
