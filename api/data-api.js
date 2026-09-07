@@ -16,7 +16,7 @@
 
 const mysql = require('mysql2/promise');
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-liana-key-for-dev';
