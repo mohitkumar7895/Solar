@@ -16,13 +16,10 @@
 
 const mysql = require('mysql2/promise');
 
-const ADMIN_PIN = process.env.ADMIN_PIN || '1234';
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-// In-memory session store (per-instance; good enough for Vercel serverless with cookies)
-// For production, consider using a proper session store (Redis, DB-backed, JWT tokens)
-// Using a simple token-based approach here
-const crypto = require('crypto');
-const sessions = {};
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-liana-key-for-dev';
 
 // Database connection pool
 let pool = null;
@@ -49,6 +46,11 @@ async function initializeTables() {
   if (tablesInitialized) return;
   const db = getPool();
   const statements = [
+    `CREATE TABLE IF NOT EXISTS admins (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(100) UNIQUE,
+      password_hash VARCHAR(255)
+    )`,
     `CREATE TABLE IF NOT EXISTS site_theme (
       id INT PRIMARY KEY DEFAULT 1,
       data JSON NOT NULL
@@ -61,13 +63,13 @@ async function initializeTables() {
     `CREATE TABLE IF NOT EXISTS ecosystem_brands (
       id INT AUTO_INCREMENT PRIMARY KEY,
       brandName VARCHAR(100),
-      logo VARCHAR(255),
+      logo LONGTEXT,
       info TEXT
     )`,
     `CREATE TABLE IF NOT EXISTS client_photos (
       id INT AUTO_INCREMENT PRIMARY KEY,
       title VARCHAR(150),
-      image VARCHAR(255),
+      image LONGTEXT,
       description TEXT
     )`,
     `CREATE TABLE IF NOT EXISTS contact_submissions (
@@ -109,7 +111,13 @@ function getSessionToken(req) {
 
 function isAuthenticated(req) {
   const token = getSessionToken(req);
-  return token && sessions[token] === true;
+  if (!token) return false;
+  try {
+    jwt.verify(token, JWT_SECRET);
+    return true;
+  } catch (err) {
+    return false;
+  }
 }
 
 // Parse request body
@@ -152,21 +160,50 @@ module.exports = async function handler(req, res) {
     const db = getPool();
 
     // =========================================================================
-    // 0. ADMIN PIN VERIFICATION
+    // 0. ADMIN REGISTRATION & LOGIN
     // =========================================================================
-    if (action === 'verify_pin' && req.method === 'POST') {
+    if (action === 'register' && req.method === 'POST') {
       const input = await parseBody(req);
-      const pin = (input && input.pin) || '';
-      if (pin === ADMIN_PIN) {
-        const token = crypto.randomBytes(32).toString('hex');
-        sessions[token] = true;
+      const { username, password } = input || {};
+      if (!username || !password) {
+        return res.status(400).json({ status: 'error', message: 'Username and password required' });
+      }
+      
+      const [existing] = await db.execute('SELECT * FROM admins WHERE username = ?', [username]);
+      if (existing.length > 0) {
+        return res.status(400).json({ status: 'error', message: 'Username already exists' });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 10);
+      await db.execute('INSERT INTO admins (username, password_hash) VALUES (?, ?)', [username, passwordHash]);
+      
+      return res.status(200).json({ status: 'success', message: 'Admin registered successfully' });
+    }
+
+    if (action === 'login' && req.method === 'POST') {
+      const input = await parseBody(req);
+      const { username, password } = input || {};
+      if (!username || !password) {
+        return res.status(400).json({ status: 'error', message: 'Username and password required' });
+      }
+
+      const [rows] = await db.execute('SELECT * FROM admins WHERE username = ?', [username]);
+      if (rows.length === 0) {
+        return res.status(401).json({ status: 'error', message: 'Invalid credentials' });
+      }
+
+      const admin = rows[0];
+      const match = await bcrypt.compare(password, admin.password_hash);
+      
+      if (match) {
+        const token = jwt.sign({ id: admin.id, username: admin.username }, JWT_SECRET, { expiresIn: '1d' });
         res.setHeader(
           'Set-Cookie',
           `liana_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`
         );
         return res.status(200).json({ status: 'success', message: 'Authenticated', token });
       } else {
-        return res.status(401).json({ status: 'error', message: 'Invalid PIN' });
+        return res.status(401).json({ status: 'error', message: 'Invalid credentials' });
       }
     }
 
@@ -174,8 +211,7 @@ module.exports = async function handler(req, res) {
     // 0. LOGOUT
     // =========================================================================
     if (action === 'logout') {
-      const token = getSessionToken(req);
-      if (token) delete sessions[token];
+      // No token to delete on server side, just clear the cookie
       res.setHeader(
         'Set-Cookie',
         `liana_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`

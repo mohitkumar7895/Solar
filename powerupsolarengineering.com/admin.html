@@ -463,12 +463,32 @@
 		<div class="auth-box">
 			<div style="font-size: 46px; color: var(--adm-primary); margin-bottom: 10px;"><i class="fa fa-lock"></i></div>
 			<h3 style="font-weight: 800; margin-bottom: 4px; color: #0f172a;">Liana Solar Admin</h3>
-			<p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">Enter Admin PIN to manage leads, ecosystem logos &amp; client photos.</p>
-			<form onsubmit="handlePinSubmit(event)">
-				<input type="password" id="adminPin" class="adm-input" placeholder="Enter Admin PIN" autofocus style="text-align: center; font-size: 16px; margin-bottom: 15px;">
-				<button type="submit" class="btn-adm" style="width: 100%; justify-content: center;"><i class="fa fa-key"></i> Unlock Dashboard</button>
-			</form>
-			<div id="authError" style="color: #ef4444; font-size: 13px; margin-top: 12px; display: none; font-weight: 600;">Invalid PIN. Try again.</div>
+			<p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">Sign in to manage leads, ecosystem logos &amp; client photos.</p>
+			
+            <div id="loginFormContainer">
+                <form onsubmit="handleLoginSubmit(event)">
+                    <input type="text" id="adminUsername" class="adm-input" placeholder="Username" autofocus style="font-size: 14px; margin-bottom: 10px;">
+                    <input type="password" id="adminPassword" class="adm-input" placeholder="Password" style="font-size: 14px; margin-bottom: 15px;">
+                    <button type="submit" class="btn-adm" style="width: 100%; justify-content: center;"><i class="fa fa-sign-in"></i> Sign In</button>
+                </form>
+                <div style="margin-top: 15px; font-size: 12px; color: #64748b;">
+                    Don't have an account? <a href="#" onclick="toggleAuthForms()" style="color: var(--adm-primary); font-weight: 700;">Register here</a>
+                </div>
+            </div>
+
+            <div id="registerFormContainer" style="display: none;">
+                <form onsubmit="handleRegisterSubmit(event)">
+                    <input type="text" id="regUsername" class="adm-input" placeholder="Choose Username" style="font-size: 14px; margin-bottom: 10px;">
+                    <input type="password" id="regPassword" class="adm-input" placeholder="Choose Password" style="font-size: 14px; margin-bottom: 15px;">
+                    <button type="submit" class="btn-adm" style="width: 100%; justify-content: center;"><i class="fa fa-user-plus"></i> Register Admin</button>
+                </form>
+                <div style="margin-top: 15px; font-size: 12px; color: #64748b;">
+                    Already have an account? <a href="#" onclick="toggleAuthForms()" style="color: var(--adm-primary); font-weight: 700;">Sign in</a>
+                </div>
+            </div>
+
+			<div id="authError" style="color: #ef4444; font-size: 13px; margin-top: 12px; display: none; font-weight: 600;"></div>
+            <div id="authSuccess" style="color: #10b981; font-size: 13px; margin-top: 12px; display: none; font-weight: 600;"></div>
 		</div>
 	</div>
 
@@ -1028,25 +1048,94 @@
 		let stagedEcoLogoBase64 = "";
 
 		// Auth PIN Setup
-		function getAdminPin() {
-			return localStorage.getItem("liana_admin_custom_pin") || "liana2026";
-		}
+		function toggleAuthForms() {
+            const loginForm = document.getElementById("loginFormContainer");
+            const regForm = document.getElementById("registerFormContainer");
+            const authError = document.getElementById("authError");
+            const authSuccess = document.getElementById("authSuccess");
+            
+            authError.style.display = "none";
+            authSuccess.style.display = "none";
+            
+            if (loginForm.style.display === "none") {
+                loginForm.style.display = "block";
+                regForm.style.display = "none";
+            } else {
+                loginForm.style.display = "none";
+                regForm.style.display = "block";
+            }
+        }
 
-		function handlePinSubmit(e) {
+		async function handleLoginSubmit(e) {
 			e.preventDefault();
-			const entered = document.getElementById("adminPin").value.trim();
-			const validPin = getAdminPin();
-			if (entered === validPin || entered === "liana2026" || entered === "admin" || entered === "1234") {
-				sessionStorage.setItem("liana_admin_auth", "true");
-				document.getElementById("authModal").style.display = "none";
-				initDashboard();
-			} else {
-				document.getElementById("authError").style.display = "block";
-			}
+			const username = document.getElementById("adminUsername").value.trim();
+            const password = document.getElementById("adminPassword").value.trim();
+            
+            try {
+                const res = await fetch('/api/data-api?action=login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                
+                if (res.ok && data.status === 'success') {
+                    sessionStorage.setItem("liana_admin_auth", "true");
+                    document.getElementById("authModal").style.display = "none";
+                    initDashboard();
+                } else {
+                    const authError = document.getElementById("authError");
+                    authError.innerText = data.message || "Invalid credentials. Try again.";
+                    authError.style.display = "block";
+                }
+            } catch (err) {
+                console.error(err);
+                const authError = document.getElementById("authError");
+                authError.innerText = "Network error. Please try again.";
+                authError.style.display = "block";
+            }
 		}
 
-		function logoutAdmin() {
+        async function handleRegisterSubmit(e) {
+			e.preventDefault();
+			const username = document.getElementById("regUsername").value.trim();
+            const password = document.getElementById("regPassword").value.trim();
+            
+            try {
+                const res = await fetch('/api/data-api?action=register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                
+                if (res.ok && data.status === 'success') {
+                    const authSuccess = document.getElementById("authSuccess");
+                    const authError = document.getElementById("authError");
+                    authError.style.display = "none";
+                    authSuccess.innerText = "Registration successful! You can now sign in.";
+                    authSuccess.style.display = "block";
+                    setTimeout(() => toggleAuthForms(), 1500);
+                } else {
+                    const authError = document.getElementById("authError");
+                    authError.innerText = data.message || "Registration failed. Try again.";
+                    authError.style.display = "block";
+                }
+            } catch (err) {
+                console.error(err);
+                const authError = document.getElementById("authError");
+                authError.innerText = "Network error. Please try again.";
+                authError.style.display = "block";
+            }
+		}
+
+		async function logoutAdmin() {
 			sessionStorage.removeItem("liana_admin_auth");
+            try {
+                await fetch('/api/data-api?action=logout', { method: 'POST' });
+            } catch (err) {
+                console.error(err);
+            }
 			location.reload();
 		}
 

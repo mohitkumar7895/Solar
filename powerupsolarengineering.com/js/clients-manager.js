@@ -36,6 +36,11 @@ if (typeof getClientPhotos !== "function") {
 
     function saveClientPhotos(photos) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
+        fetch('/api/data-api?action=save_photos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(photos)
+        }).catch(err => console.log('Server API optional sync:', err));
     }
 
     function addClientPhotos(imagesList) {
