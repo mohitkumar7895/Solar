@@ -1072,7 +1072,7 @@
             const password = document.getElementById("adminPassword").value.trim();
             
             try {
-                const res = await fetch('/api/data-api.js?action=login', {
+                const res = await fetch('/api/data-api?action=login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -1102,7 +1102,7 @@
             const password = document.getElementById("regPassword").value.trim();
             
             try {
-                const res = await fetch('/api/data-api.js?action=register', {
+                const res = await fetch('/api/data-api?action=register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -1132,7 +1132,7 @@
 		async function logoutAdmin() {
 			sessionStorage.removeItem("liana_admin_auth");
             try {
-                const res = await fetch('/api/data-api.js?action=logout', { method: 'POST' });
+                const res = await fetch('/api/data-api?action=logout', { method: 'POST' });
             } catch (err) {
                 console.error(err);
             }
