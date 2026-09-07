@@ -9,8 +9,7 @@
  * 6. Smooth Scroll Reveal Animations
  * 7. Hybrid Server Sync (data-api.php)
  */
-
-const API_ENDPOINT = "/api/data-api";
+const API_ENDPOINT = "/api/data-api.js";
 
 // =========================================================================
 // 0. THEME SWITCHER STUDIO & SYSTEM
