@@ -14,6 +14,7 @@
  *   POST save_leads    – Update leads list (auth required)
  */
 
+require('dotenv').config();
 const mysql = require('mysql2/promise');
 
 const bcrypt = require('bcryptjs');
@@ -26,11 +27,11 @@ let pool = null;
 function getPool() {
   if (!pool) {
     pool = mysql.createPool({
-      host: process.env.DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.DB_PORT || '3306'),
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'lianasolar',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       waitForConnections: true,
       connectionLimit: 5,
       queueLimit: 0,
